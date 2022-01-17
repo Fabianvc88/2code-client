@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function Home() {
+export default function NotFoundPage() {
   return (
     <div>
-      Homepage
+      404 Not Found
     </div>
   )
 }

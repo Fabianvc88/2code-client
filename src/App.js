@@ -1,16 +1,25 @@
 import './App.css';
-import { Routes, Route, Link } from "react-router-dom";
+import Nav from './components/Nav';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
+import About from './pages/About';
+import NotFoundPage from './pages/NotFoundPage';
+
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="Login" element={<Login />} />
-      </Routes>
-    </div>
+    <BrowserRouter>
+        <Nav />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="about" element={<About />} />
+          <Route path='*' element={<NotFoundPage />} />
+        </Routes>
+    </BrowserRouter>
   );
 }
 
