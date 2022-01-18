@@ -1,5 +1,6 @@
 import './App.css';
 import Nav from './components/Nav';
+import Navbar from './components/Navbar';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
@@ -12,11 +13,12 @@ import { Outlet } from "react-router-dom";
 function App() {
   return (
     <BrowserRouter>
-        <Nav />
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="about" element={<About />} />
+          <Route path="login" element={<Login />} />
           <Route path='*' element={<NotFoundPage />} />
         </Routes>
     </BrowserRouter>

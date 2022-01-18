@@ -1,12 +1,12 @@
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Practice', href: '#', current: false },
-  { name: 'About', href: '#', current: false },
+  { name: 'Home', href: '/', current: false },
+  { name: 'Dashboard', href: '/dashboard', current: false },
+  { name: 'About', href: '/about', current: false },
 ]
 
 function classNames(...classes) {
@@ -47,7 +47,7 @@ export default function Navbar() {
                 <div className="hidden sm:block sm:ml-6">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <Link
+                      <NavLink
 												to={item.href}
                         key={item.name}
                         //href={item.href}
@@ -58,15 +58,15 @@ export default function Navbar() {
                         aria-current={item.current ? 'page' : undefined}
                       >
                         {item.name}
-                      </Link>
+                      </NavLink>
                     ))}
                   </div>
                 </div>
               </div>
               <div className="bsolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-								<Link to="/Login" key="Login" className="bg-purple-600 text-white hover:bg-purple-500 hover:text-white px-5 py-2 rounded-md text-sm font-medium">
-									Sign In
-								</Link>
+								<NavLink to="/login" key="Login" className="bg-purple-600 text-white hover:bg-purple-500 hover:text-white px-5 py-2 rounded-md text-sm font-medium">
+									Acceder
+								</NavLink>
               </div>
               {/*<div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
