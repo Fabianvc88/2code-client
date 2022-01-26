@@ -42,16 +42,16 @@ export default function Dashboard() {
         {/**Right Panels */}
         <div className='flex flex-col sm:w-2/3 max-h-full'>
           <div className='flex p-3 border-l border-b'>
-            <button className='mx-3 p-2 w-24 bg-gray-200'>Prev</button> 
-            <button className='mx-3 p-2 w-24 bg-gray-200'>Next</button>
+            <button className='mx-3 py-2 px-4 w-24 bg-gray-200'>Prev</button> 
+            <button className='mx-3 py-2 px-4 w-24 bg-gray-200'>Next</button>
             <p>something</p>
           </div>
 
           <div className='flex p-3 border-l border-b'>
-            <button className='mx-3 p-2 w-24 bg-gray-200'>Prev</button> 
-            <button className='mx-3 p-2 w-24 bg-gray-200'>Next</button>
+            <button className='mx-3 py-2 px-4 w-24 bg-gray-200'>Prev</button> 
+            <button className='mx-3 py-2 px-4 w-24 bg-gray-200'>Next</button>
             <p>something</p>
-            <button className='mx-3 p-2 w-24 bg-gray-200'>End test</button>
+            <button className='mx-3 py-2 px-4 w-24 bg-gray-200'>End test</button>
           </div>
 
           <div className='flex h-full'>

@@ -3,9 +3,9 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { NavLink } from "react-router-dom";
 
 const navigation = [
-  { name: 'Home', href: '/', current: false },
-  { name: 'Dashboard', href: '/dashboard', current: false },
-  { name: 'About', href: '/about', current: false },
+  { name: 'Inicio', href: '/', current: false },
+  { name: 'Ejercicios', href: '/dashboard', current: false },
+  { name: 'Ayuda', href: '/about', current: false },
 ]
 
 function classNames(...classes) {
@@ -65,7 +65,7 @@ export default function Navbar() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-								<NavLink to="/login" key="Login" className="bg-purple-600 text-white hover:bg-purple-700 hover:text-white px-5 py-2 rounded-md text-sm font-medium">
+								<NavLink to="/login" key="Login" className="bg-blue-600 text-white hover:bg-blue-700 hover:text-white px-5 py-2 rounded-md text-sm font-medium">
 									Acceder
 								</NavLink>
               </div>
