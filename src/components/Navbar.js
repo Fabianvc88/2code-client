@@ -3,9 +3,9 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { NavLink } from "react-router-dom";
 
 const navigation = [
-  { name: 'Inicio', href: '/', current: false },
-  { name: 'Ejercicios', href: '/dashboard', current: false },
-  { name: 'Ayuda', href: '/about', current: false },
+  { name: 'Inicio', href: '/', hidden: false, current: false },
+  { name: 'Ejercicios', href: '/dashboard', hidden: false, current: false },
+  { name: 'Ayuda', href: '/about', hidden: false, current: false },
 ]
 
 function classNames(...classes) {
@@ -14,11 +14,11 @@ function classNames(...classes) {
 
 export default function Navbar() {
   return (
-    <Disclosure as="nav" className="bg-gray-700 w-full">
+    <Disclosure as="nav" className="bg-white w-full border border-b">
       {({ open }) => (
         <>
           <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-            <div className="relative flex items-center justify-between h-16">
+            <div className="relative flex items-center justify-between h-14">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
                 <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
@@ -30,31 +30,39 @@ export default function Navbar() {
                   )}
                 </Disclosure.Button>
               </div>
-              <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+
+              <div className='flex justify-start text-3xl font-bold text-sky-500 tracking-tighter'>2
+                {/* Logo */}
+                <p className='tracking-normal'>C</p>
+                <p className='hidden md:block text-3xl text-gray-700 tracking-normal'>ode</p>
+              </div>
+
+              <div className="flex-1 flex items-center justify-center sm:justify-end">
+                {/* Logo */}
                 <div className="flex-shrink-0 flex items-center">
                   <img
-                    className="block lg:hidden h-8 w-auto"
+                    className="hidden lg:hidden h-8 w-auto"
                     src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
                     alt="Workflow"
                   />
                   <img
-                    className="hidden lg:block h-8 w-auto"
+                    className="hidden lg:hidden h-8 w-auto"
                     src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg"
                     alt="Workflow"
                   />
                 </div>
 
-                {/*Links en pantalla sm+*/}
                 <div className="hidden sm:block sm:ml-6">
-                  <div className="flex space-x-4">
+                  {/*Links en pantalla sm+*/}
+                  <div className="flex space-x-3">
                     {navigation.map((item) => (
                       <NavLink
 												to={item.href}
                         key={item.name}
-                        //href={item.href}
+                        hidden={item.hidden}
                         className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-600 hover:text-white',
-                          'px-3 py-2 rounded-md text-sm font-medium'
+                          item.current ? 'bg-gray-900 text-white' : 'text-gray-700 hover:text-sky-600',
+                          'px-3 py-2 rounded-md text-sm font-semibold'
                         )}
                         aria-current={item.current ? 'page' : undefined}
                       >
@@ -64,11 +72,13 @@ export default function Navbar() {
                   </div>
                 </div>
               </div>
+
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-								<NavLink to="/login" key="Login" className="bg-blue-600 text-white hover:bg-blue-700 hover:text-white px-5 py-2 rounded-md text-sm font-medium">
+								<NavLink to="/login" key="Login" className="bg-sky-500 hover:bg-sky-600 text-white hover:text-white px-5 py-2 rounded-md text-sm font-medium">
 									Acceder
 								</NavLink>
               </div>
+
               {/*<div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
                   type="button"

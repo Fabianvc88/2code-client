@@ -31,7 +31,7 @@ export default function Register() {
             <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline" id="passwordValidation" type="password" placeholder="Repetir contraseña"/>
           </div>
           
-          <div className="flex flex-col items-center space-y-8 pt-8">
+          <div className="flex flex-col items-center space-y-8 pt-5">
             <button className="justify-center bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
               Registrarse
             </button>
@@ -41,7 +41,7 @@ export default function Register() {
             </p>
           </div>
         </form>
-        
+
         <p className="text-center text-gray-500 text-xs">
           2Code &copy; 2022. Todos los derechos reservados.
         </p>

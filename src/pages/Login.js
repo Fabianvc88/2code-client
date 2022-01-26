@@ -29,11 +29,11 @@ export default function Login() {
           </div>
 
           <div className="flex flex-col items-center space-y-4">
-            <button className="w-28 justify-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+            <button className="w-28 justify-center bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
               Entrar
             </button>
             <NavLink className="inline-block align-baseline font-bold text-xs text-gray-400 hover:text-gray-500" to="/register">Registrarse</NavLink>
-            <a className="inline-block align-baseline font-bold text-xs text-blue-600 hover:underline" href="#">
+            <a className="inline-block align-baseline font-bold text-xs text-sky-600 hover:underline" href="#">
               ¿Has olvidado tu contraseña?
             </a>
           </div>
