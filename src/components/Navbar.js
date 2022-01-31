@@ -1,15 +1,17 @@
-import { Disclosure } from '@headlessui/react'
-import { MenuIcon, XIcon } from '@heroicons/react/outline'
+import { Disclosure } from "@headlessui/react";
+import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { NavLink } from "react-router-dom";
+import Logo from "./Logo";
 
 const navigation = [
-  { name: 'Inicio', href: '/', hidden: false, current: false },
-  { name: 'Ejercicios', href: '/dashboard', hidden: false, current: false },
-  { name: 'Ayuda', href: '/about', hidden: false, current: false },
-]
+  { name: "Inicio", href: "/", hidden: false, current: false },
+  { name: "Ejercicios", href: "/problems", hidden: false, current: false },
+  { name: "Ayuda", href: "/about", hidden: false, current: false },
+  { name: "Dashboard", href: "/dashboard", hidden: false, current: false },
+];
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function Navbar() {
@@ -31,15 +33,10 @@ export default function Navbar() {
                 </Disclosure.Button>
               </div>
 
-              <div className='flex justify-start text-3xl font-bold text-sky-500 tracking-tighter'>2
+              <div className="flex-1 flex items-center justify-center sm:justify-start">
+                <Logo adaptive />
                 {/* Logo */}
-                <p className='tracking-normal'>C</p>
-                <p className='hidden md:block text-3xl text-gray-700 tracking-normal'>ode</p>
-              </div>
-
-              <div className="flex-1 flex items-center justify-center sm:justify-end">
-                {/* Logo */}
-                <div className="flex-shrink-0 flex items-center">
+                <div className="flex-shrink-0 flex justify-center items-center ">
                   <img
                     className="hidden lg:hidden h-8 w-auto"
                     src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
@@ -51,20 +48,24 @@ export default function Navbar() {
                     alt="Workflow"
                   />
                 </div>
+              </div>
 
-                <div className="hidden sm:block sm:ml-6">
+              <div className="flex-1 hidden sm:flex items-center justify-end ">
+                <div className="block sm:ml-6">
                   {/*Links en pantalla sm+*/}
                   <div className="flex space-x-3">
                     {navigation.map((item) => (
                       <NavLink
-												to={item.href}
+                        to={item.href}
                         key={item.name}
                         hidden={item.hidden}
                         className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-700 hover:text-sky-600',
-                          'px-3 py-2 rounded-md text-sm font-semibold'
+                          item.current
+                            ? "bg-gray-900 text-white"
+                            : "text-gray-700 hover:text-sky-600",
+                          "px-3 py-2 rounded-md text-sm font-semibold"
                         )}
-                        aria-current={item.current ? 'page' : undefined}
+                        aria-current={item.current ? "page" : undefined}
                       >
                         {item.name}
                       </NavLink>
@@ -74,9 +75,13 @@ export default function Navbar() {
               </div>
 
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-								<NavLink to="/login" key="Login" className="bg-sky-500 hover:bg-sky-600 text-white hover:text-white px-5 py-2 rounded-md text-sm font-medium">
-									Acceder
-								</NavLink>
+                <NavLink
+                  to="/login"
+                  key="Login"
+                  className="bg-sky-500 hover:bg-sky-600 text-white hover:text-white px-5 py-2 rounded-md text-sm font-medium"
+                >
+                  Acceder
+                </NavLink>
               </div>
 
               {/*<div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -89,7 +94,7 @@ export default function Navbar() {
                 </button>
 
                 {/* Profile dropdown */}
-                {/*<Menu as="div" className="ml-3 relative">
+              {/*<Menu as="div" className="ml-3 relative">
                   <div>
                     <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                       <span className="sr-only">Open user menu</span>
@@ -155,10 +160,12 @@ export default function Navbar() {
                   as="a"
                   href={item.href}
                   className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-600 hover:text-white',
-                    'block px-3 py-2 rounded-md text-base font-medium'
+                    item.current
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-700 hover:text-sky-600",
+                    "block px-3 py-2 rounded-md text-base font-medium"
                   )}
-                  aria-current={item.current ? 'page' : undefined}
+                  aria-current={item.current ? "page" : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>
@@ -168,5 +175,5 @@ export default function Navbar() {
         </>
       )}
     </Disclosure>
-  )
+  );
 }
