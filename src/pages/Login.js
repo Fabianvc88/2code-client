@@ -21,7 +21,7 @@ export default function Login() {
     try {
       setLoading(true);
       await signIn(emailRef.current.value, passwordRef.current.value);
-      navigate(from, { replace: true });
+      navigate("/dashboard", { replace: true });
     } catch (e) {
       console.log(e);
       alert("Error logging in");

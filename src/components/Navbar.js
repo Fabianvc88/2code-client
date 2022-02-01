@@ -2,6 +2,9 @@ import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
+import { AuthContext } from "../contexts/authContext";
+import { useContext } from "react";
+import Avatar from "./Avatar";
 
 const navigation = [
   { name: "Inicio", href: "/", hidden: false, current: false },
@@ -15,6 +18,8 @@ function classNames(...classes) {
 }
 
 export default function Navbar() {
+  const { currentUser } = useContext(AuthContext);
+
   return (
     <Disclosure as="nav" className="bg-white w-full border border-b">
       {({ open }) => (
@@ -74,10 +79,29 @@ export default function Navbar() {
                 </div>
               </div>
 
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <div
+                className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+                hidden={!currentUser}
+              >
+                <p className="mx-4 text-sm" hidden={!currentUser}>
+                  Sonny
+                </p>
+                <Avatar
+                  url="https://coaching.papareact.com/ai9"
+                  hidden={!currentUser}
+                />
+              </div>
+
+              <div
+                className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+                hidden={currentUser}
+              >
+                {/**Login Button */}
                 <NavLink
                   to="/login"
                   key="Login"
+                  hidden={currentUser}
+                  /* className={classNames(,"bg-sky-500 hover:bg-sky-600 text-white hover:text-white px-5 py-2 rounded-md text-sm font-medium")} */
                   className="bg-sky-500 hover:bg-sky-600 text-white hover:text-white px-5 py-2 rounded-md text-sm font-medium"
                 >
                   Acceder
