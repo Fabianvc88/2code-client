@@ -30,16 +30,16 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100 ">
-      <div className="flex justify-center mt-14">
+    <div className="flex h-screen flex-col bg-gray-100 ">
+      <div className="mt-14 flex justify-center">
         <Logo />
       </div>
 
       {/*Body*/}
-      <div className="w-full max-w-xs m-auto pb-14">
-        <div className="w-min text-gray-400 opacity-70 hover:text-gray-500 cursor-pointer mb-5">
+      <div className="m-auto w-full max-w-xs pb-14">
+        <div className="mb-5 w-min cursor-pointer text-gray-400 opacity-70 hover:text-gray-500">
           <NavLink className="flex" to="/">
-            <ArrowLeftIcon className="h-6 w-5 mr-2" />
+            <ArrowLeftIcon className="mr-2 h-6 w-5" />
             Atrás
           </NavLink>
         </div>
@@ -47,15 +47,15 @@ export default function Login() {
         {/* <div>Currently logged in as: {currentUser?.email}</div> */}
 
         <form
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md"
           onSubmit={handleSubmit}
         >
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="mb-2 block text-sm font-bold text-gray-700">
               Usuario
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline"
+              className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 text-sm leading-tight text-gray-700 shadow focus:outline-none"
               type="text"
               placeholder="Correo electrónico"
               ref={emailRef}
@@ -64,11 +64,11 @@ export default function Login() {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="mb-2 block text-sm font-bold text-gray-700">
               Contraseña
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-sm mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              className="focus:shadow-outline mb-3 w-full appearance-none rounded border py-2 px-3 text-sm leading-tight text-gray-700 shadow focus:outline-none"
               type="password"
               placeholder="*************"
               ref={passwordRef}
@@ -78,20 +78,20 @@ export default function Login() {
 
           <div className="flex flex-col items-center space-y-4">
             <button
-              className="w-28 justify-center bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="focus:shadow-outline w-28 justify-center rounded bg-sky-500 py-2 px-4 font-bold text-white hover:bg-sky-600 focus:outline-none"
               type="submit"
               disabled={loading || currentUser}
             >
               Entrar
             </button>
             <NavLink
-              className="inline-block align-baseline font-bold text-xs text-gray-400 hover:text-gray-500"
+              className="inline-block align-baseline text-xs font-bold text-gray-400 hover:text-gray-500"
               to="/register"
             >
               Registrarse
             </NavLink>
             <a
-              className="inline-block align-baseline font-bold text-xs text-sky-600 hover:underline"
+              className="inline-block align-baseline text-xs font-bold text-sky-600 hover:underline"
               href="#"
             >
               ¿Has olvidado tu contraseña?
@@ -99,7 +99,7 @@ export default function Login() {
           </div>
         </form>
 
-        <p className="text-center text-gray-500 text-xs">
+        <p className="text-center text-xs text-gray-500">
           &copy; 2Code 2022. Todos los derechos reservados.
         </p>
       </div>

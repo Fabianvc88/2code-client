@@ -3,8 +3,9 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
 import { AuthContext } from "../contexts/authContext";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import Avatar from "./Avatar";
+import { logOut } from "../firebase";
 
 const navigation = [
   { name: "Inicio", href: "/", hidden: false, current: false },
@@ -17,18 +18,30 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Navbar() {
+export default function Navbar(props) {
+  const [loading, setLoading] = useState(false);
   const { currentUser } = useContext(AuthContext);
 
+  async function handleSignOut() {
+    console.log("logging out");
+    setLoading(true);
+    try {
+      await logOut();
+    } catch (e) {
+      alert("Error loggin out");
+    }
+    setLoading(false);
+  }
+
   return (
-    <Disclosure as="nav" className="bg-white w-full border border-b">
+    <Disclosure as="nav" className={classNames(props.className, "w-full")}>
       {({ open }) => (
         <>
-          <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-            <div className="relative flex items-center justify-between h-14">
+          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
-                <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XIcon className="block h-6 w-6" aria-hidden="true" />
@@ -38,24 +51,24 @@ export default function Navbar() {
                 </Disclosure.Button>
               </div>
 
-              <div className="flex-1 flex items-center justify-center sm:justify-start">
+              <div className="flex flex-1 items-center justify-center sm:justify-start">
                 <Logo adaptive />
                 {/* Logo */}
-                <div className="flex-shrink-0 flex justify-center items-center ">
+                <div className="flex flex-shrink-0 items-center justify-center ">
                   <img
-                    className="hidden lg:hidden h-8 w-auto"
+                    className="hidden h-8 w-auto lg:hidden"
                     src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
                     alt="Workflow"
                   />
                   <img
-                    className="hidden lg:hidden h-8 w-auto"
+                    className="hidden h-8 w-auto lg:hidden"
                     src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg"
                     alt="Workflow"
                   />
                 </div>
               </div>
 
-              <div className="flex-1 hidden sm:flex items-center justify-end ">
+              <div className="hidden flex-1 items-center justify-end sm:flex ">
                 <div className="block sm:ml-6">
                   {/*Links en pantalla sm+*/}
                   <div className="flex space-x-3">
@@ -68,7 +81,7 @@ export default function Navbar() {
                           item.current
                             ? "bg-gray-900 text-white"
                             : "text-gray-700 hover:text-sky-600",
-                          "px-3 py-2 rounded-md text-sm font-semibold"
+                          "rounded-md px-3 py-2 text-sm font-semibold"
                         )}
                         aria-current={item.current ? "page" : undefined}
                       >
@@ -79,17 +92,26 @@ export default function Navbar() {
                 </div>
               </div>
 
+              {/**Logged Username and picture */}
               <div
-                className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+                className="absolute inset-y-0 right-0 flex items-center gap-x-5 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
                 hidden={!currentUser}
               >
-                <p className="mx-4 text-sm" hidden={!currentUser}>
+                <p className=" ml-4 text-sm" hidden={!currentUser}>
                   Sonny
                 </p>
                 <Avatar
                   url="https://coaching.papareact.com/ai9"
                   hidden={!currentUser}
                 />
+                <button
+                  className=" border border-red-500 px-4 py-1 text-red-500 hover:bg-red-500 hover:text-gray-100"
+                  onClick={handleSignOut}
+                  disabled={loading || !currentUser}
+                  hidden={!currentUser}
+                >
+                  Sign out
+                </button>
               </div>
 
               <div
@@ -102,7 +124,7 @@ export default function Navbar() {
                   key="Login"
                   hidden={currentUser}
                   /* className={classNames(,"bg-sky-500 hover:bg-sky-600 text-white hover:text-white px-5 py-2 rounded-md text-sm font-medium")} */
-                  className="bg-sky-500 hover:bg-sky-600 text-white hover:text-white px-5 py-2 rounded-md text-sm font-medium"
+                  className="rounded-md bg-sky-500 px-5 py-2 text-sm font-medium text-white hover:bg-sky-600 hover:text-white"
                 >
                   Acceder
                 </NavLink>
@@ -177,7 +199,7 @@ export default function Navbar() {
           </div>
           {/**Links en pantalla xs */}
           <Disclosure.Panel className="sm:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1">
+            <div className="space-y-1 px-2 pt-2 pb-3">
               {navigation.map((item) => (
                 <Disclosure.Button
                   key={item.name}
@@ -187,13 +209,21 @@ export default function Navbar() {
                     item.current
                       ? "bg-gray-900 text-white"
                       : "text-gray-700 hover:text-sky-600",
-                    "block px-3 py-2 rounded-md text-base font-medium"
+                    "block rounded-md px-3 py-2 text-base font-medium"
                   )}
                   aria-current={item.current ? "page" : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>
               ))}
+              <button
+                className=" px-4 py-1 text-red-500 hover:text-red-700"
+                onClick={handleSignOut}
+                disabled={loading || !currentUser}
+                hidden={!currentUser}
+              >
+                Sign out
+              </button>
             </div>
           </Disclosure.Panel>
         </>

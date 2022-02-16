@@ -1,0 +1,3 @@
+Color principal: sky-500  hover: sky-600
+Color de resalto: #DB4C40 hover: #B84136
+Colores secundarios: teal-500 hover: teal-600
