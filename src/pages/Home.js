@@ -6,7 +6,13 @@ import Footer from "../components/Footer";
 import { NavLink } from "react-router-dom";
 //import homeimg from "../../public/images";
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
 export default function Home() {
+  const { currentUser } = useContext(AuthContext);
+
   return (
     <div className="bg-perl flex h-screen flex-col items-center">
       <Navbar className="" />
@@ -21,7 +27,10 @@ export default function Home() {
           </p>
           <NavLink
             to="/register"
-            className="rounded-md bg-teal-500 px-5 py-2 text-sm font-medium text-white hover:bg-teal-600 hover:text-white"
+            className={classNames(
+              currentUser ? " invisible " : " visible",
+              " rounded-md bg-teal-500 px-5 py-2 text-sm font-medium text-white hover:bg-teal-600 hover:text-white"
+            )}
           >
             {/*colores de boton: #DB4C40 #B84136*/}
             Registrarse
