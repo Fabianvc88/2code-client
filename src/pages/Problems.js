@@ -10,7 +10,8 @@ export default function Problems() {
       </header>
 
       {/**Body */}
-      <div className="flex h-full flex-col sm:flex-row">
+      <div className="flex h-full w-full flex-col sm:flex-row">
+        {/**Left tabs */}
         <div className="flex flex-col items-center border-r sm:w-1/3">
           <Tabs className="h-full" />
         </div>
@@ -38,14 +39,8 @@ export default function Problems() {
               <p>2</p>
               <p>3</p>
             </div>
-            <div className="w-full border-l border-t p-3">
-              <p className="text-sm">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Gravida neque convallis a cras semper. Diam donec adipiscing
-                tristique risus nec feugiat. Lectus quam id leo in vitae turpis
-                massa.
-              </p>
+            <div className=" h-full w-full border border-l border-t border-green-500 bg-white">
+              <textarea className=" h-full w-full resize-none p-3" />
             </div>
           </div>
         </div>
