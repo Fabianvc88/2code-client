@@ -37,7 +37,7 @@ export default function Register() {
   }
 
   return (
-    <div className="flex h-screen flex-col items-center bg-gray-100">
+    <div className="bg-perl flex h-screen flex-col items-center">
       <div className="mt-14 flex justify-center">
         <Logo />
       </div>
@@ -50,8 +50,6 @@ export default function Register() {
             Login
           </NavLink>
         </div>
-
-        {/* <div>Currently logged in as: {currentUser?.email}</div> */}
 
         <form
           className="mb-4 flex flex-col space-y-4 rounded bg-white px-8 pt-6 pb-8 shadow-md"
