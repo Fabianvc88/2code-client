@@ -3,12 +3,36 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Tabs from "../components/Tabs";
 import Editor from "../components/Editor";
+import LanguageDropdown from "../components/LanguageDropdown";
 import CodeMirror from "@uiw/react-codemirror";
 import "codemirror/keymap/sublime";
 import { javascript } from "codemirror/mode/javascript/javascript";
+import axios from "axios";
 
 export default function Problems() {
-  const [code, setCode] = useState(`function add(a, b) {\n  \n}`);
+  const [code, setCode] = useState(
+    `#include "stdio.h"\r\rint add(a, b) {\n   \n}`
+  );
+  const url = "http://localhost:5000/problems";
+  const code2 = { code: "Hola bola" };
+
+  const submitCode = () => {
+    console.log("Code is: ", code);
+    axios.post(url, { code }).then((res) => console.log(res));
+    /*fetch(url, {
+      method: "POST",
+      header: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      mode: "cors",
+      body: JSON.stringify(code2),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });*/
+  };
 
   return (
     <div className="bg-perl flex h-screen flex-col items-center">
@@ -43,12 +67,16 @@ export default function Problems() {
 
           <div className=" flex justify-between border-l border-b p-2 px-10 text-sm text-slate-800">
             <div className="flex gap-x-10">
-              <button className="bg-perl rounded px-5 py-2 hover:bg-gray-100">
+              {/* <button className="bg-perl rounded px-5 py-2 hover:bg-gray-100">
                 Lenguaje
-              </button>
+              </button> */}
+              <LanguageDropdown />
             </div>
             <div className="flex gap-x-10">
-              <button className="bg-perl rounded px-3 py-2 text-emerald-600 transition-colors hover:bg-gray-100 ">
+              <button
+                className="bg-perl rounded px-3 py-2 text-emerald-600 transition-colors hover:bg-gray-100 "
+                onClick={submitCode}
+              >
                 Ejecutar código
               </button>
               <button className="rounded bg-gray-600 px-3 py-2 text-white transition-colors hover:bg-gray-500">
@@ -57,7 +85,7 @@ export default function Problems() {
             </div>
           </div>
 
-          <div className="flex flex-1">
+          <div className="flex flex-1 border-l">
             <div className=" relative flex-1">
               <div className=" absolute h-full w-full overflow-y-auto">
                 {/* <div className=" relative h-full w-full "> */}
@@ -69,7 +97,6 @@ export default function Problems() {
                   }}
                   onChange={(editor, change) => {
                     setCode(editor.getValue());
-                    console.log(code);
                   }}
                 />
                 {/* </div> */}
