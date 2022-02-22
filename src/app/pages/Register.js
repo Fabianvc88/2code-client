@@ -1,7 +1,7 @@
 import React, { useRef, useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
-import { singUp } from "../firebase";
+import { singUp } from "../services/firebase";
 import Logo from "../components/Logo";
 import { AuthContext } from "../contexts/authContext";
 

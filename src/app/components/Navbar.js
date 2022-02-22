@@ -5,7 +5,7 @@ import Logo from "./Logo";
 import { AuthContext } from "../contexts/authContext";
 import { useState, useContext } from "react";
 import Avatar from "./Avatar";
-import { logOut } from "../firebase";
+import { logOut } from "../services/firebase";
 
 const navigation = [
   { name: "Inicio", href: "/", hidden: false, current: false },

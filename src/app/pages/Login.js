@@ -2,7 +2,7 @@ import React, { useRef, useState, useContext } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 import Logo from "../components/Logo";
-import { signIn } from "../firebase";
+import { signIn } from "../services/firebase";
 import { AuthContext } from "../contexts/authContext";
 
 export default function Login() {
@@ -36,7 +36,7 @@ export default function Login() {
       </div>
 
       {/*Body*/}
-      <div className="m-auto w-full max-w-xs pb-14">
+      <div className=" m-auto flex w-full max-w-xs flex-col pb-14 sm:max-w-sm">
         <div className="mb-5 w-min cursor-pointer text-gray-400 opacity-70 hover:text-gray-500">
           <NavLink className="flex" to="/">
             <ArrowLeftIcon className="mr-2 h-6 w-5" />
@@ -47,7 +47,7 @@ export default function Login() {
         {/* <div>Currently logged in as: {currentUser?.email}</div> */}
 
         <form
-          className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md"
+          className="mb-4 rounded bg-white px-8 py-14 shadow-md"
           onSubmit={handleSubmit}
         >
           <div className="mb-4">
@@ -85,13 +85,13 @@ export default function Login() {
               Entrar
             </button>
             <NavLink
-              className="inline-block align-baseline text-xs font-bold text-gray-400 hover:text-gray-500"
+              className="inline-block align-baseline text-xs font-bold text-gray-400 hover:text-gray-500 lg:text-sm"
               to="/register"
             >
               Registrarse
             </NavLink>
             <a
-              className="inline-block align-baseline text-xs font-bold text-sky-600 hover:underline"
+              className="inline-block align-baseline text-xs font-bold text-sky-600 hover:underline lg:text-sm"
               href="#"
             >
               ¿Has olvidado tu contraseña?

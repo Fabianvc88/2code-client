@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
-import Navbar from "../components/Navbar";
-import { AuthContext } from "../contexts/authContext";
-import Footer from "../components/Footer";
 import { NavLink } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { AuthContext } from "../contexts/authContext";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
