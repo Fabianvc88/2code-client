@@ -54,7 +54,7 @@ export default function Problem() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className=" flex items-center justify-center">Cargando...</div>;
   }
   return (
     <div className="bg-perl flex h-screen flex-col items-center">
@@ -62,7 +62,11 @@ export default function Problem() {
       <div className="flex h-full w-full flex-col sm:flex-row">
         {/**Left tabs */}
         <div className="flex flex-col items-center  sm:w-1/3">
-          <Tabs className="h-full" />
+          <Tabs
+            className="h-full"
+            title={problem.title}
+            description={problem.description}
+          />
         </div>
 
         {/**Right Panels */}

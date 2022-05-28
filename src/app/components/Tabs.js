@@ -5,57 +5,53 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Example(props) {
-  let [categories] = useState({
-    Enunciado: [
-      {
-        id: 1,
-        title: "Does drinking coffee make you smarter?",
-        date: "5h ago",
-        commentCount: 5,
-        shareCount: 2,
-      },
-      {
-        id: 2,
-        title: "So you've bought coffee... now what?",
-        date: "2h ago",
-        commentCount: 3,
-        shareCount: 2,
-      },
-    ],
-    Notas: [
-      {
-        id: 1,
-        title: "Is tech making coffee better or worse?",
-        date: "Jan 7",
-        commentCount: 29,
-        shareCount: 16,
-      },
-      {
-        id: 2,
-        title: "The most innovative things happening in coffee",
-        date: "Mar 19",
-        commentCount: 24,
-        shareCount: 12,
-      },
-    ],
-    Comentarios: [
-      {
-        id: 1,
-        title: "Ask Me Anything: 10 answers to your questions about coffee",
-        date: "2d ago",
-        commentCount: 9,
-        shareCount: 5,
-      },
-      {
-        id: 2,
-        title: "The worst advice we've ever heard about coffee",
-        date: "4d ago",
-        commentCount: 1,
-        shareCount: 2,
-      },
-    ],
-  });
+export default function Tabs(props) {
+  const [categories] = useState(["Enunciado", "Notas", "Comentarios"]);
+
+  const [comments, setComments] = useState([
+    {
+      id: 1,
+      title: "Muy facil, no?",
+      date: "hace 5h",
+      commentCount: 5,
+      upvoteCount: 2,
+    },
+    {
+      id: 2,
+      title: "So you've bought coffee... now what?",
+      date: "hace 2h",
+      commentCount: 3,
+      upvoteCount: 2,
+    },
+    {
+      id: 3,
+      title: "Is tech making coffee better or worse?",
+      date: "Ene 7",
+      commentCount: 29,
+      upvoteCount: 16,
+    },
+    {
+      id: 4,
+      title: "The most innovative things happening in coffee",
+      date: "Mar 19",
+      commentCount: 24,
+      upvoteCount: 12,
+    },
+    {
+      id: 5,
+      title: "Ask Me Anything: 10 answers to your questions about coffee",
+      date: "hace 2d",
+      commentCount: 9,
+      upvoteCount: 5,
+    },
+    {
+      id: 6,
+      title: "The worst advice we've ever heard about coffee",
+      date: "hace 4d",
+      commentCount: 1,
+      upvoteCount: 2,
+    },
+  ]);
 
   return (
     <div
@@ -66,7 +62,7 @@ export default function Example(props) {
     >
       <Tab.Group>
         <Tab.List className="flex space-x-1 bg-blue-900/20 p-1 xl:rounded-md">
-          {Object.keys(categories).map((category) => (
+          {categories.map((category) => (
             <Tab
               key={category}
               className={({ selected }) =>
@@ -83,32 +79,42 @@ export default function Example(props) {
             </Tab>
           ))}
         </Tab.List>
-        <Tab.Panels className="mt-2 h-full rounded-md bg-white">
-          {Object.values(categories).map((posts, idx) => (
-            <Tab.Panel key={idx} className=" p-5">
-              <h2 className="py-5 font-bold ">Titulo del ejercicio</h2>
-              <ul className="">
-                {posts.map((post) => (
-                  <li
-                    key={post.id}
-                    className="hover:bg-coolGray-100 relative rounded-md py-3"
-                  >
-                    <h3 className="text-sm font-medium leading-5">
-                      {post.title}
-                    </h3>
 
-                    <ul className="text-coolGray-500 mt-1 flex space-x-1 text-xs font-normal leading-4">
-                      <li>{post.date}</li>
-                      <li>&middot;</li>
-                      <li>{post.commentCount} comments</li>
-                      <li>&middot;</li>
-                      <li>{post.shareCount} shares</li>
-                    </ul>
-                  </li>
-                ))}
-              </ul>
-            </Tab.Panel>
-          ))}
+        <Tab.Panels className="mt-2 h-full rounded-md bg-white">
+          <Tab.Panel className=" p-5">
+            <h2 className=" py-5 font-bold">{props.title}</h2>
+            <p>{props.description}</p>
+            <button className=" my-5 text-gray-500 underline hover:cursor-pointer">
+              Mostrar ayuda:
+            </button>
+          </Tab.Panel>
+
+          <Tab.Panel className=" p-5">
+            <h2 className=" py-5 font-bold">2</h2>
+          </Tab.Panel>
+
+          <Tab.Panel className=" p-5">
+            <ul>
+              {comments.map((comment) => (
+                <li
+                  key={comment.id}
+                  className="hover:bg-coolGray-100 relative rounded-md py-3"
+                >
+                  <h3 className="text-sm font-medium leading-5">
+                    {comment.title}
+                  </h3>
+
+                  <ul className="text-coolGray-500 mt-1 flex space-x-1 text-xs font-normal leading-4">
+                    <li>{comment.date}</li>
+                    <li>&middot;</li>
+                    <li>{comment.commentCount} comentarios</li>
+                    <li>&middot;</li>
+                    <li>{comment.upvoteCount} likes</li>
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
     </div>
