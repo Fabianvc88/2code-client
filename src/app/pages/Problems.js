@@ -3,6 +3,8 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import DynamicTable from "../components/DynamicTable";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import CreateProblem from "../pages/CreateProblem";
 
 export default function Problems() {
   const [code, setCode] = useState(
@@ -10,7 +12,7 @@ export default function Problems() {
   );
   const url = "http://localhost:5000/api/problem/";
 
-  const gerAllProblems = () => {
+  const getAllProblems = () => {
     console.log("Code is: ", code);
     axios.get(url).then((res) => console.log(res));
   };
@@ -22,7 +24,16 @@ export default function Problems() {
       </header>
 
       {/**Body */}
-      <div className="flex h-full w-full flex-col gap-10 sm:p-10">
+      <div className="m-auto flex h-full w-full flex-col gap-10 sm:p-10">
+        <div className=" w-1/2 self-center">
+          <Link
+            className=" hover:boder rounded-sm p-2 hover:bg-gray-200"
+            to="/new"
+          >
+            Nuevo problema
+          </Link>
+        </div>
+
         <DynamicTable />
       </div>
       <Footer />

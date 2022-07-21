@@ -20,7 +20,17 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 
 export function singUp(email, password) {
-  return createUserWithEmailAndPassword(auth, email, password);
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      console.log(user);
+      // TODO create user at server;
+      return user;
+    })
+    .catch((error) => {
+      console.log("error ", error.code, ": ", error.message);
+      return null;
+    });
 }
 
 export function signIn(email, password) {

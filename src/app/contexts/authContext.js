@@ -16,6 +16,7 @@ export function RequireAuth({ children }) {
     // than dropping them off on the home page.
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
+  // if currentUser is found then we let them continue
   return children;
 }
 
