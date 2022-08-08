@@ -26,10 +26,7 @@ export default function Problems() {
       {/**Body */}
       <div className="m-auto flex h-full w-full flex-col gap-10 sm:p-10">
         <div className=" w-1/2 self-center">
-          <Link
-            className=" hover:boder rounded-sm p-2 hover:bg-gray-200"
-            to="/new"
-          >
+          <Link className=" rounded-sm p-2 hover:bg-gray-200" to="new">
             Nuevo problema
           </Link>
         </div>
