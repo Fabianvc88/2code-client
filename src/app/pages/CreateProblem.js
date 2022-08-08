@@ -5,6 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
 import axios from "axios";
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
 export default function CreateProblem() {
   const titleRef = useRef();
   const descriptionRef = useRef();
@@ -16,6 +20,7 @@ export default function CreateProblem() {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const url = "http://localhost:5000/api/problem/";
+  const [problemCreationstate, setProblemCreationState] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -27,14 +32,27 @@ export default function CreateProblem() {
       help: help,
       tests: testCasesRef.current.value,
       difficulty: difficultyRef.current.value,
+      //TODO fix userid below
+      userid: 1,
+      jsmain: "",
+      cmain: "",
+      javamain: "",
     };
 
     console.log("sending new problem to server...");
-    sendProblem(problem);
+    sendProblem(problem).then((res) => {
+      console.log("received on main: ", res);
+      if (res === "CREATE") {
+        setProblemCreationState("created");
+      }
+    });
   }
 
   async function sendProblem(problem) {
-    await axios.post(url, problem).then((res) => console.log(res));
+    let res;
+    res = await axios.post(url, problem);
+    console.log("received: ", res.data);
+    return res.data.status;
   }
 
   return (
@@ -98,20 +116,34 @@ export default function CreateProblem() {
                   <option value="30">difícil</option>
                 </select>
               </div>
-              <div className=" flex gap-x-6">
-                <Link
-                  className="  focus:shadow-outline max-w-xs place-self-end rounded-sm bg-gray-100 p-2 py-2 px-4 text-center hover:bg-gray-200 focus:outline-none lg:w-1/5"
-                  type="submit"
-                  to="/problems"
-                >
-                  Cancelar
-                </Link>
-                <button
-                  className=" focus:shadow-outline  max-w-xs place-self-end rounded-sm bg-gray-100 p-2 py-2 px-4 hover:bg-green-200  focus:outline-none lg:w-1/5"
-                  type="submit"
-                >
-                  Crear problema
-                </button>
+              <div className=" flex justify-between">
+                <div className=" flex w-1/2 gap-x-6">
+                  <Link
+                    className=" focus:shadow-outline w-1/3 rounded-sm bg-gray-100 p-2 py-2 px-4 text-center hover:bg-gray-200 focus:outline-none"
+                    type="submit"
+                    to="/problems"
+                  >
+                    Cancelar
+                  </Link>
+                  <button
+                    className=" focus:shadow-outline w-1/3 rounded-sm bg-gray-100 p-2 py-2 px-4 text-center hover:bg-green-200 focus:outline-none"
+                    type="submit"
+                  >
+                    Crear problema
+                  </button>
+                </div>
+                <div className=" flex w-1/2 justify-end">
+                  <p
+                    className={classNames(
+                      problemCreationstate !== "created"
+                        ? " invisible "
+                        : " visible",
+                      " bg-green-400 p-2 px-6"
+                    )}
+                  >
+                    Problema creado
+                  </p>
+                </div>
               </div>
             </div>
           </form>
