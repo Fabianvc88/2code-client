@@ -9,6 +9,10 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+const sleep = (milliseconds) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
+
 export default function CreateProblem() {
   const titleRef = useRef();
   const descriptionRef = useRef();
@@ -20,7 +24,8 @@ export default function CreateProblem() {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const url = "http://localhost:5000/api/problem/";
-  const [problemCreationstate, setProblemCreationState] = useState("");
+  const [problemCreationState, setProblemCreationState] = useState("");
+  let [creationErrorMsg, setCreationErrorMsg] = useState();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -40,19 +45,35 @@ export default function CreateProblem() {
     };
 
     console.log("sending new problem to server...");
-    sendProblem(problem).then((res) => {
-      console.log("received on main: ", res);
+    sendProblem(problem).then(async (res) => {
       if (res === "CREATE") {
         setProblemCreationState("created");
+        await sleep(2500);
+        navigate("/problems");
+      } else {
+        if (res.msg === "Uniquename already exists") {
+          setCreationErrorMsg("Título en uso");
+        } else {
+          setCreationErrorMsg("Error desconocido: intentarlo más tarde");
+        }
+        setProblemCreationState("failed");
       }
     });
   }
 
+  function titleChangeHandler() {
+    if (problemCreationState !== "") setProblemCreationState("");
+  }
+
   async function sendProblem(problem) {
     let res;
-    res = await axios.post(url, problem);
-    console.log("received: ", res.data);
-    return res.data.status;
+    try {
+      res = await axios.post(url, problem);
+      console.log("received: ", res.data);
+      return res.data.status;
+    } catch (err) {
+      return err.response.data.errors[0];
+    }
   }
 
   return (
@@ -81,6 +102,7 @@ export default function CreateProblem() {
                 autoComplete="off"
                 ref={titleRef}
                 required
+                onChange={titleChangeHandler}
               />
               <textarea
                 className=" h-24 w-full resize-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
@@ -135,9 +157,17 @@ export default function CreateProblem() {
                 <div className=" flex w-1/2 justify-end">
                   <p
                     className={classNames(
-                      problemCreationstate !== "created"
-                        ? " invisible "
-                        : " visible",
+                      problemCreationState !== "failed" ? " hidden" : " block",
+                      " bg-red-400 p-2 px-6"
+                    )}
+                  >
+                    {creationErrorMsg}
+                  </p>
+                  <p
+                    className={classNames(
+                      problemCreationState !== "created"
+                        ? " hidden "
+                        : " block",
                       " bg-green-400 p-2 px-6"
                     )}
                   >
