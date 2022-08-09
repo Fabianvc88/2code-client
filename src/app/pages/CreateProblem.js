@@ -2,7 +2,7 @@ import React, { useRef, useState, useContext } from "react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../contexts/authContext";
+//import { AuthContext } from "../contexts/authContext";
 import axios from "axios";
 
 function classNames(...classes) {
@@ -19,10 +19,10 @@ export default function CreateProblem() {
   const help1Ref = useRef();
   const testCasesRef = useRef();
   const difficultyRef = useRef();
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  //const [error, setError] = useState("");
+  //const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { currentUser } = useContext(AuthContext);
+  //const { currentUser } = useContext(AuthContext);
   const url = "http://localhost:5000/api/problem/";
   const [problemCreationState, setProblemCreationState] = useState("");
   let [creationErrorMsg, setCreationErrorMsg] = useState();
