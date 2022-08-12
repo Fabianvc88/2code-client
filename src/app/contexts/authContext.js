@@ -22,13 +22,14 @@ export function RequireAuth({ children }) {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => setCurrentUser(user));
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser }}>
+    <AuthContext.Provider value={{ currentUser, userData, setUserData }}>
       {children}
     </AuthContext.Provider>
   );

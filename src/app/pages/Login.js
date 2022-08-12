@@ -1,9 +1,10 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 import Logo from "../components/Logo";
 import { signIn } from "../services/firebase";
 import { AuthContext } from "../contexts/authContext";
+import axios from "axios";
 
 export default function Login() {
   let navigate = useNavigate();
@@ -11,7 +12,7 @@ export default function Login() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const [loading, setLoading] = useState(false);
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, userData, setUserData } = useContext(AuthContext);
 
   let from = location.state?.from?.pathname || "/";
 
@@ -21,12 +22,13 @@ export default function Login() {
     try {
       setLoading(true);
       await signIn(emailRef.current.value, passwordRef.current.value);
-      navigate(-1); //"/dashboard", { replace: true }
-    } catch (e) {
-      console.log(e);
-      alert("Error logging in");
+      navigate("/dashboard", { replace: true }); //"/dashboard", { replace: true }
+    } catch (err) {
+      console.log(err);
+      alert("Usuario y/o contraseña no son correctos.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (

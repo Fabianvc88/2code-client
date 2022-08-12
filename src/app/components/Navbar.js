@@ -3,7 +3,7 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
 import { AuthContext } from "../contexts/authContext";
-import { useState, useContext } from "react";
+import { useContext, useState } from "react";
 import Avatar from "./Avatar";
 import { logOut } from "../services/firebase";
 
@@ -97,9 +97,9 @@ export default function Navbar(props) {
                 className="absolute inset-y-0 right-0 flex items-center gap-x-5 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
                 hidden={!currentUser}
               >
-                <p className=" ml-4 text-sm" hidden={!currentUser}>
-                  Sonny
-                </p>
+                {/**<p className=" ml-4 text-sm" hidden={!currentUser}>
+                  {firstname}
+                        </p>*/}
                 <Avatar
                   url="https://coaching.papareact.com/ai9"
                   hidden={!currentUser}

@@ -35,7 +35,7 @@ export default function Problems() {
       </header>
 
       {/**Body */}
-      <div className="m-auto flex h-full w-full flex-col gap-10 sm:p-6">
+      <div className="m-auto flex h-full w-full flex-col gap-y-4 ">
         <div className=" w-1/2 self-center">
           <Link className=" rounded-sm p-2 hover:bg-gray-200" to="new">
             Nuevo problema
