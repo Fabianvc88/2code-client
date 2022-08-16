@@ -37,12 +37,12 @@ export default function Problems() {
       {/**Body */}
       <div className="m-auto flex h-full w-full flex-col gap-y-4 ">
         <div className=" w-1/2 self-center">
-          <Link className=" rounded-sm p-2 hover:bg-gray-200" to="new">
+          <Link className=" hidden rounded-sm p-2 hover:bg-gray-200" to="new">
             Nuevo problema
           </Link>
         </div>
         <div className=" w-5/6 self-center ">
-          <Table data={tableData} rowsPerPage={10} />
+          <Table data={tableData} rowsPerPage={12} />
         </div>
 
         {/**<DynamicTable />*/}

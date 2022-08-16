@@ -1,7 +1,6 @@
-import React, { useRef, useState, useContext } from "react";
-import Footer from "../components/Footer";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
 import axios from "axios";
 import ToggleSwitch from "../components/ToggleSwitch";
@@ -14,10 +13,11 @@ const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
 
-export default function CreateProblem() {
+export default function EditProblem() {
   const navigate = useNavigate();
-  const url = "http://localhost:5000/api/problem";
   const { currentUser } = useContext(AuthContext);
+  const params = useParams();
+  const url = "http://localhost:5000/api/problem/";
 
   const titleRef = useRef();
   const descriptionRef = useRef();
@@ -27,11 +27,26 @@ export default function CreateProblem() {
 
   const [problemCreationState, setProblemCreationState] = useState("");
   let [creationErrorMsg, setCreationErrorMsg] = useState();
-  const [isActive, setIsActive] = useState(true);
+  const [problem, setProblem] = useState({});
+  const [isActive, setIsActive] = useState(false);
 
-  async function sendProblem(problem) {
+  useEffect(() => {
+    async function fetchProblemFields() {
+      try {
+        const response = await axios.get(`${url}/${params.problemId}`);
+        setProblem(response.data);
+        setIsActive(response.data.active);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    fetchProblemFields();
+  }, [params.problemId]);
+
+  async function sendProblem(prob) {
     try {
-      const res = await axios.post(url, problem);
+      const res = await axios.put(`${url}/${params.problemId}`, prob);
       //console.log("received: ", res.data);
       return res.data.status;
     } catch (err) {
@@ -42,11 +57,12 @@ export default function CreateProblem() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    const help = [help1Ref.current.value];
-    const problem = {
+    //console.log("user id: ", problem.userid);
+
+    const problemModifications = {
       title: titleRef.current.value,
       description: descriptionRef.current.value,
-      help: help,
+      help: [help1Ref.current.value],
       tests: testCasesRef.current.value,
       difficulty: difficultyRef.current.value,
       useremail: currentUser.email,
@@ -56,9 +72,9 @@ export default function CreateProblem() {
       active: isActive,
     };
 
-    sendProblem(problem).then(async (res) => {
-      if (res === "CREATE") {
-        setProblemCreationState("created");
+    sendProblem(problemModifications).then(async (res) => {
+      if (res === "UPDATE") {
+        setProblemCreationState("updated");
         await sleep(1500);
         navigate("/dashboard");
       } else {
@@ -91,7 +107,7 @@ export default function CreateProblem() {
           >
             <div className=" flex w-full max-w-5xl flex-col gap-y-2">
               <h1 className=" border-b pb-4 text-4xl text-gray-800">
-                Nuevo problema :
+                Editar problema :
               </h1>
               <div className=" flex items-center gap-x-2">
                 <p className=" mx-2">Título : </p>
@@ -103,6 +119,7 @@ export default function CreateProblem() {
                   ref={titleRef}
                   required
                   onChange={titleChangeHandler}
+                  defaultValue={problem.title}
                 />
               </div>
               <div className=" flex flex-col gap-y-2">
@@ -114,16 +131,18 @@ export default function CreateProblem() {
                   autoComplete="off"
                   ref={descriptionRef}
                   required
+                  defaultValue={problem.description}
                 />
               </div>
               <div className=" flex flex-col gap-y-2">
                 <p className=" mx-2">Ayuda : </p>
                 <textarea
                   className=" h-14 w-full resize-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
-                  id="description"
+                  id="help1"
                   type="text"
                   autoComplete="off"
                   ref={help1Ref}
+                  defaultValue={problem.help}
                 />
               </div>
               <div className=" flex flex-col gap-y-2">
@@ -135,14 +154,30 @@ export default function CreateProblem() {
                   autoComplete="off"
                   ref={testCasesRef}
                   required
+                  defaultValue={problem.tests}
                 />
               </div>
               <div className=" flex gap-x-4 p-2">
-                <p>Dificultad: </p>
+                <p>Dificultad : </p>
                 <select name="difficulty" id="diff" ref={difficultyRef}>
-                  <option value="10">fácil</option>
-                  <option value="20">medio</option>
-                  <option value="30">difícil</option>
+                  <option
+                    value="10"
+                    selected={problem.difficulty === "10" ? true : false}
+                  >
+                    fácil
+                  </option>
+                  <option
+                    value="20"
+                    selected={problem.difficulty === "20" ? true : false}
+                  >
+                    medio
+                  </option>
+                  <option
+                    value="30"
+                    selected={problem.difficulty === "30" ? true : false}
+                  >
+                    difícil
+                  </option>
                 </select>
               </div>
               <div className=" flex gap-x-2">
@@ -156,7 +191,7 @@ export default function CreateProblem() {
                   <Link
                     className=" focus:shadow-outline w-1/3 rounded-sm bg-gray-100 p-2 py-2 px-4 text-center hover:bg-gray-200 focus:outline-none"
                     type="submit"
-                    to="/problems"
+                    to="/dashboard"
                   >
                     Cancelar
                   </Link>
@@ -164,7 +199,7 @@ export default function CreateProblem() {
                     className=" focus:shadow-outline w-1/3 rounded-sm bg-gray-100 p-2 py-2 px-4 text-center hover:bg-green-200 focus:outline-none"
                     type="submit"
                   >
-                    Crear problema
+                    Confirmar
                   </button>
                 </div>
                 <div className=" flex w-1/2 justify-end">
@@ -178,13 +213,13 @@ export default function CreateProblem() {
                   </p>
                   <p
                     className={classNames(
-                      problemCreationState !== "created"
+                      problemCreationState !== "updated"
                         ? " hidden "
                         : " block",
                       " bg-green-400 p-2 px-6"
                     )}
                   >
-                    Problema creado
+                    Problema actualizado
                   </p>
                 </div>
               </div>
@@ -192,7 +227,6 @@ export default function CreateProblem() {
           </form>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

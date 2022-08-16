@@ -37,12 +37,20 @@ const Table = ({ data, rowsPerPage }) => {
               >
                 <td className={styles.idCell}>{problem.id}</td>
                 <td className={styles.tableCell}>{problem.title}</td>
-                <td className={styles.tableCell}>{problem.difficulty}</td>
-                <td className=" flex justify-center">
+                <td className={styles.tableCell}>
+                  {problem.difficulty === "10"
+                    ? "fácil"
+                    : problem.difficulty === "20"
+                    ? "medio"
+                    : problem.difficulty === "30"
+                    ? "difícil"
+                    : "?"}
+                </td>
+                <td className=" flex">
                   <Link
                     to={`/playground/${problem.id}`}
                     key={problem.id}
-                    className=" m-2 rounded-md border border-solid bg-gray-200 p-1 text-black hover:bg-sky-400"
+                    className=" m-2 w-1/5 rounded-md border border-solid bg-gray-200 p-1 text-black hover:bg-sky-400"
                   >
                     Resolver
                   </Link>

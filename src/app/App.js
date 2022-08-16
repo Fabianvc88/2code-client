@@ -11,47 +11,52 @@ import { AuthProvider, RequireAuth } from "./contexts/authContext"; //<Route pat
 import Playground from "./pages/Playground";
 import Problem from "./pages/Problem";
 import CreateProblem from "./pages/CreateProblem";
+import EditProblem from "./pages/EditProblem";
+import React from "react";
 
 function App() {
   const user = false;
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="problems" element={<Problems />} />
-          <Route path="problems/new" element={<CreateProblem />} />
-          <Route path="about" element={<About />} />
-          <Route
-            path="dashboard"
-            element={
-              <RequireAuth>
-                <Dashboard />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="playground"
-            element={
-              <RequireAuth>
-                <Playground />
-              </RequireAuth>
-            }
-          >
-            <Route path=":problemId" element={<Problem />} />
-          </Route>
-          <Route
-            path="login"
-            element={user ? <Navigate to="dashboard" /> : <Login />}
-          />
-          <Route
-            path="register"
-            element={user ? <Navigate to="dashboard" /> : <Register />}
-          />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+    <React.StrictMode>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="problems" element={<Problems />} />
+            <Route path="problems/new" element={<CreateProblem />} />
+            <Route path="problems/edit/:problemId" element={<EditProblem />} />
+            <Route path="about" element={<About />} />
+            <Route
+              path="dashboard"
+              element={
+                <RequireAuth>
+                  <Dashboard />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="playground"
+              element={
+                <RequireAuth>
+                  <Playground />
+                </RequireAuth>
+              }
+            >
+              <Route path=":problemId" element={<Problem />} />
+            </Route>
+            <Route
+              path="login"
+              element={user ? <Navigate to="dashboard" /> : <Login />}
+            />
+            <Route
+              path="register"
+              element={user ? <Navigate to="dashboard" /> : <Register />}
+            />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </React.StrictMode>
   );
 }
 

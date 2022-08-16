@@ -1,20 +1,19 @@
-import React, { useRef, useState, useContext, useEffect } from "react";
+import React, { useRef, useState, useContext } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 import Logo from "../components/Logo";
 import { signIn } from "../services/firebase";
 import { AuthContext } from "../contexts/authContext";
-import axios from "axios";
 
 export default function Login() {
   let navigate = useNavigate();
-  let location = useLocation();
+  //let location = useLocation();
   const emailRef = useRef();
   const passwordRef = useRef();
   const [loading, setLoading] = useState(false);
-  const { currentUser, userData, setUserData } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
-  let from = location.state?.from?.pathname || "/";
+  //let from = location.state?.from?.pathname || "/";
 
   async function handleSubmit(e) {
     e.preventDefault();
