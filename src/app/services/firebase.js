@@ -22,10 +22,8 @@ export const auth = getAuth();
 export function singUp(email, password) {
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      const user = userCredential.user;
-      console.log(user);
       // TODO create user at server;
-      return user;
+      return userCredential.user;
     })
     .catch((error) => {
       console.log("error ", error.code, ": ", error.message);

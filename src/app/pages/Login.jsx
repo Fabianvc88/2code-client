@@ -4,14 +4,17 @@ import { ArrowLeftIcon } from "@heroicons/react/outline";
 import Logo from "../components/Logo";
 import { signIn } from "../services/firebase";
 import { AuthContext } from "../contexts/authContext";
+import { sleep } from "../utils/sleep";
 
 export default function Login() {
   let navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
   //let location = useLocation();
+
   const emailRef = useRef();
   const passwordRef = useRef();
   const [loading, setLoading] = useState(false);
-  const { currentUser } = useContext(AuthContext);
+  const [errorMsg, setErrorMsg] = useState("");
 
   //let from = location.state?.from?.pathname || "/";
 
@@ -20,14 +23,21 @@ export default function Login() {
 
     try {
       setLoading(true);
-      await signIn(emailRef.current.value, passwordRef.current.value);
-      navigate("/dashboard", { replace: true }); //"/dashboard", { replace: true }
+      const userCredential = await signIn(
+        emailRef.current.value,
+        passwordRef.current.value
+      );
+      navigate("/dashboard", { replace: true });
     } catch (err) {
-      console.log(err);
-      alert("Usuario y/o contraseña no son correctos.");
+      //console.log(err);
+      setErrorMsg("Usuario y/o contraseña incorrectos");
     } finally {
       setLoading(false);
     }
+  }
+
+  function inputChangeHandler() {
+    if (errorMsg !== "") setErrorMsg("");
   }
 
   return (
@@ -45,8 +55,6 @@ export default function Login() {
           </NavLink>
         </div>
 
-        {/* <div>Currently logged in as: {currentUser?.email}</div> */}
-
         <form
           className="mb-4 rounded bg-white px-8 py-14 shadow-md"
           onSubmit={handleSubmit}
@@ -59,6 +67,7 @@ export default function Login() {
               className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 text-sm leading-tight text-gray-700 shadow focus:outline-none"
               type="text"
               placeholder="Correo electrónico"
+              onChange={inputChangeHandler}
               ref={emailRef}
               required
             />
@@ -72,6 +81,7 @@ export default function Login() {
               className="focus:shadow-outline mb-3 w-full appearance-none rounded border py-2 px-3 text-sm leading-tight text-gray-700 shadow focus:outline-none"
               type="password"
               placeholder="*************"
+              onChange={inputChangeHandler}
               ref={passwordRef}
               required
             />
@@ -85,6 +95,13 @@ export default function Login() {
             >
               Entrar
             </button>
+            <p
+              className={`
+                ${errorMsg === "" ? " hidden" : " block"}
+                " px-6" bg-red-400 p-2`}
+            >
+              {errorMsg}
+            </p>
             <NavLink
               className="inline-block align-baseline text-xs font-bold text-gray-400 hover:text-gray-500 lg:text-sm"
               to="/register"
@@ -100,9 +117,9 @@ export default function Login() {
           </div>
         </form>
 
-        <p className="text-center text-xs text-gray-500">
+        {/* <p className="text-center text-xs text-gray-500">
           &copy; 2Code 2022. Todos los derechos reservados.
-        </p>
+        </p> */}
       </div>
     </div>
   );

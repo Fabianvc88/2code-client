@@ -1,5 +1,11 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
@@ -7,7 +13,7 @@ import About from "./pages/About";
 import NotFoundPage from "./pages/NotFoundPage";
 import Register from "./pages/Register";
 import Problems from "./pages/Problems";
-import { AuthProvider, RequireAuth } from "./contexts/authContext"; //<Route path="/editor" element={<Playground />} />
+import { AuthProvider, RequireAuth } from "./contexts/authContext";
 import Playground from "./pages/Playground";
 import Problem from "./pages/Problem";
 import CreateProblem from "./pages/CreateProblem";
@@ -22,9 +28,18 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="problems" element={<Problems />} />
-            <Route path="problems/new" element={<CreateProblem />} />
-            <Route path="problems/edit/:problemId" element={<EditProblem />} />
+            <Route
+              path="problems"
+              element={
+                <RequireAuth>
+                  <Outlet />
+                </RequireAuth>
+              }
+            >
+              <Route index element={<Problems />} />
+              <Route path="newProblem" element={<CreateProblem />} />
+              <Route path="edit/:problemId" element={<EditProblem />} />
+            </Route>
             <Route path="about" element={<About />} />
             <Route
               path="dashboard"

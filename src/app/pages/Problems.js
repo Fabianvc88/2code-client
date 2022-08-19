@@ -1,22 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import DynamicTable from "../components/DynamicTable";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Table from "../components/Table/Table";
 
 export default function Problems() {
-  const [code, setCode] = useState(
-    `#include "stdio.h"\r\rint add(a, b) {\n   \n}`
-  );
-  const url = "http://localhost:5000/api/problem/";
-
-  const getAllProblems = () => {
-    console.log("Code is: ", code);
-    axios.get(url).then((res) => console.log(res));
-  };
-
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
@@ -44,10 +32,7 @@ export default function Problems() {
         <div className=" w-5/6 self-center ">
           <Table data={tableData} rowsPerPage={12} />
         </div>
-
-        {/**<DynamicTable />*/}
       </div>
-      <Footer />
     </div>
   );
 }

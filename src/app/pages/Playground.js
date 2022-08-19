@@ -12,7 +12,6 @@ function Playground() {
 
       {/**Body */}
       <Outlet />
-      <Footer />
     </div>
   );
 }

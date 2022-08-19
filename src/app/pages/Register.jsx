@@ -4,36 +4,65 @@ import { ArrowLeftIcon } from "@heroicons/react/outline";
 import { singUp } from "../services/firebase";
 import Logo from "../components/Logo";
 import { AuthContext } from "../contexts/authContext";
+import axios from "axios";
+import { sleep } from "../utils/sleep";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Register() {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
 
-  async function handleSubmit() {
+  const firstnameRef = useRef();
+  const lastnameRef = useRef();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const passwordConfirmRef = useRef();
+  const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      console.log("Las contraseñas no coinciden");
-      return setError("Passwords do not match");
+      setErrorMsg("Contraseñas no coinciden");
+      return;
     }
 
     try {
-      setError("");
       setLoading(true);
-      await singUp(emailRef.current.value, passwordRef.current.value);
-      navigate("/");
+      const user = await singUp(
+        emailRef.current.value,
+        passwordRef.current.value
+      );
+      //console.log("User creds: ", userCredentials);
+      const res = await axios.post(
+        "http://localhost:5000/api/authentication/signup",
+        {
+          email: emailRef.current.value,
+          firstname: firstnameRef.current.value,
+          lastname: lastnameRef.current.value,
+          password: passwordRef.current.value,
+        }
+      );
+      if (res.data.status !== "CREATE") {
+        //TODO show error on page
+        setErrorMsg("Failed to create an account");
+        setLoading(false);
+        await sleep(1500);
+        return;
+      }
+      await sleep(1500);
+      navigate("/", { replace: true });
     } catch (e) {
-      setError("Failed to create an account");
-      console.log(e.message);
+      setErrorMsg("Failed to create an account");
     }
     setLoading(false);
+  }
+
+  function inputChangeHandler() {
+    if (errorMsg !== "") setErrorMsg("");
   }
 
   return (
@@ -61,6 +90,7 @@ export default function Register() {
               id="name"
               type="text"
               placeholder="Nombre"
+              ref={firstnameRef}
               required
             />
             <input
@@ -68,9 +98,10 @@ export default function Register() {
               id="lastnames"
               type="text"
               placeholder="Apellidos"
+              ref={lastnameRef}
+              required
             />
           </div>
-
           <div className="">
             <input
               className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 text-sm leading-tight text-gray-700 shadow focus:outline-none"
@@ -81,7 +112,6 @@ export default function Register() {
               required
             />
           </div>
-
           <div className="">
             <input
               className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 text-sm leading-tight text-gray-700 shadow focus:outline-none"
@@ -92,17 +122,22 @@ export default function Register() {
               required
             />
           </div>
-
           <div className="">
             <input
-              className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 text-sm leading-tight text-gray-700 shadow focus:outline-none"
+              className={classNames(
+                errorMsg === "Contraseñas no coinciden"
+                  ? " border-2 border-red-600"
+                  : " border",
+                " focus:shadow-outline w-full appearance-none rounded py-2 px-3 text-sm leading-tight text-gray-700 shadow focus:outline-none"
+              )}
               id="passwordValidation"
               type="password"
               placeholder="Repetir contraseña"
+              onChange={inputChangeHandler}
               ref={passwordConfirmRef}
+              required
             />
           </div>
-
           <div className="flex flex-col items-center space-y-8 pt-5">
             <button
               className="focus:shadow-outline rounded bg-teal-500 py-2 px-4 font-semibold  text-white hover:bg-teal-600 focus:outline-none"
@@ -111,6 +146,13 @@ export default function Register() {
             >
               Registrarse
             </button>
+            <p
+              className={`
+                ${errorMsg === "" ? " hidden" : " block"}
+                " px-6" bg-red-400 p-2`}
+            >
+              {errorMsg}
+            </p>
             <p className="text-justify text-xs text-gray-500">
               Al hacer clic en "Registrarse", aceptas nuestras{" "}
               <a

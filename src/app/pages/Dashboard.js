@@ -65,7 +65,7 @@ export default function Dashboard() {
           <div className=" flex w-2/6 flex-col gap-y-2 rounded-sm p-4 text-center">
             <Link
               className=" rounded-sm bg-gray-200 p-2 hover:bg-gray-300"
-              to="/problems/new"
+              to="/problems/newProblem"
             >
               Nuevo problema
             </Link>
