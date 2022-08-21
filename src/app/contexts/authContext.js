@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { auth } from "../services/firebase";
+import { auth, isEmailIsVerified } from "../services/firebase";
 
 export const AuthContext = createContext();
 
@@ -15,6 +15,9 @@ export function RequireAuth({ children }) {
     // along to that page after they login, which is a nicer user experience
     // than dropping them off on the home page.
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+  if (!isEmailIsVerified()) {
+    return <Navigate to="/verifyEmail" replace />;
   }
   // if currentUser is found then we let them continue
   return children;

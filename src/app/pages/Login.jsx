@@ -1,5 +1,5 @@
 import React, { useRef, useState, useContext } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 import Logo from "../components/Logo";
 import { signIn } from "../services/firebase";
@@ -40,6 +40,9 @@ export default function Login() {
     if (errorMsg !== "") setErrorMsg("");
   }
 
+  if (currentUser) {
+    return <Navigate to="/dashboard" replace={true} />;
+  }
   return (
     <div className="flex h-screen flex-col bg-gray-100 ">
       <div className="mt-14 flex justify-center">

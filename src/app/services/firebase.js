@@ -3,9 +3,11 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
+  sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import { Navigate } from "react-router";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDgKCrvyxpGa5k77O8NjREB7efCN_MZ6lI",
@@ -19,16 +21,21 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 
-export function singUp(email, password) {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // TODO create user at server;
-      return userCredential.user;
-    })
-    .catch((error) => {
-      console.log("error ", error.code, ": ", error.message);
-      return null;
-    });
+export function isEmailIsVerified() {
+  auth.currentUser.reload();
+  return auth.currentUser.emailVerified;
+}
+
+export async function singUp(email, password) {
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  ).catch((error) => {
+    console.log("error ", error.code, ": ", error.message);
+    return null;
+  });
+  return userCredential.user;
 }
 
 export function signIn(email, password) {

@@ -1,11 +1,12 @@
 import React, { useRef, useState, useContext } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 import { singUp } from "../services/firebase";
 import Logo from "../components/Logo";
 import { AuthContext } from "../contexts/authContext";
 import axios from "axios";
 import { sleep } from "../utils/sleep";
+import { sendEmailVerification } from "firebase/auth";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -32,11 +33,18 @@ export default function Register() {
 
     try {
       setLoading(true);
+      // Create account on Firebase
       const user = await singUp(
         emailRef.current.value,
         passwordRef.current.value
       );
-      //console.log("User creds: ", userCredentials);
+      if (!user) {
+        setErrorMsg("Failed to create an account");
+        setLoading(false);
+        await sleep(1500);
+        return;
+      }
+      // Create account on postgress
       const res = await axios.post(
         "http://localhost:5000/api/authentication/signup",
         {
@@ -53,18 +61,32 @@ export default function Register() {
         await sleep(1500);
         return;
       }
-      await sleep(1500);
-      navigate("/", { replace: true });
+      // If user created successfully
+      sendEmailVerification(user)
+        .then(() => {
+          // Email sent successfully
+          navigate("/verifyEmail", { replace: true });
+        })
+        .catch((error) => {
+          // Failed to send email
+          setErrorMsg("Error al enviar email de verificación");
+          console.error("error ", error.code, ": ", error.message);
+          setLoading(false);
+        });
+      // await sleep(1500);
+      // navigate("/", { replace: true });
     } catch (e) {
       setErrorMsg("Failed to create an account");
     }
-    setLoading(false);
   }
 
   function inputChangeHandler() {
     if (errorMsg !== "") setErrorMsg("");
   }
 
+  // if (currentUser) {
+  //   return <Navigate to="/dashboard" replace={true} />;
+  // }
   return (
     <div className="bg-perl flex h-screen flex-col items-center">
       <div className="mt-14 flex justify-center">
