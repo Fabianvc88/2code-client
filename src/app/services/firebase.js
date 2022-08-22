@@ -16,7 +16,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth();
+export const auth = getAuth(app);
 
 export function isEmailIsVerified() {
   auth.currentUser.reload();

@@ -36,6 +36,7 @@ export default function AdminLogin() {
         passwordRef.current.value
       );
       navigate("/dashboard", { replace: true });
+      return;
     } catch (err) {
       setErrorMsg("Usuario y/o contraseña incorrectos");
       setLoading(false);

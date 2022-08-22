@@ -1,5 +1,5 @@
 import React, { useRef, useState, useContext } from "react";
-import { Navigate, NavLink, useNavigate } from "react-router-dom";
+import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 import { singUp } from "../services/firebase";
 import Logo from "../components/Logo";
@@ -15,6 +15,7 @@ function classNames(...classes) {
 export default function Register() {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+  const location = useLocation();
 
   const firstnameRef = useRef();
   const lastnameRef = useRef();
@@ -53,7 +54,7 @@ export default function Register() {
         await sleep(1500);
         return;
       }
-      // Create account on postgress
+      // Create account on postgres
       const res = await axios.post(
         "http://localhost:5000/api/authentication/signup",
         {
@@ -64,7 +65,6 @@ export default function Register() {
         }
       );
       if (res.data.status !== "CREATE") {
-        //TODO show error on page
         setErrorMsg("Failed to create an account");
         setLoading(false);
         await sleep(1500);
@@ -74,7 +74,10 @@ export default function Register() {
       sendEmailVerification(user)
         .then(() => {
           // Email sent successfully
-          navigate("/verifyEmail", { replace: true });
+          navigate("/verifyEmail", {
+            replace: true,
+            state: { from: location },
+          });
         })
         .catch((error) => {
           // Failed to send email
@@ -82,8 +85,6 @@ export default function Register() {
           console.error("error ", error.code, ": ", error.message);
           setLoading(false);
         });
-      // await sleep(1500);
-      // navigate("/", { replace: true });
     } catch (err) {
       setErrorMsg("Failed to create an account: ", err);
     }

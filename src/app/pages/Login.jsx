@@ -5,6 +5,7 @@ import Logo from "../components/Logo";
 import { signIn } from "../services/firebase";
 import { AuthContext } from "../contexts/authContext";
 import { sleep } from "../utils/sleep";
+import axios from "axios";
 
 export default function Login() {
   let navigate = useNavigate();
@@ -23,15 +24,26 @@ export default function Login() {
 
     try {
       setLoading(true);
+      //check if user exists in postgres
+      const res = await axios.post(
+        "http://localhost:5000/api/authentication/login",
+        {
+          email: emailRef.current.value,
+          password: passwordRef.current.value,
+        }
+      );
+      if (res.data.status !== "SIGNED") {
+        throw res.data.status;
+      }
+      //signin in firebase
       const userCredential = await signIn(
         emailRef.current.value,
         passwordRef.current.value
       );
       navigate("/dashboard", { replace: true });
+      return;
     } catch (err) {
-      //console.log(err);
       setErrorMsg("Usuario y/o contraseña incorrectos");
-    } finally {
       setLoading(false);
     }
   }

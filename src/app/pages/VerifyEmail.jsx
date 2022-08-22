@@ -1,12 +1,15 @@
 import { ArrowLeftIcon } from "@heroicons/react/outline";
+import { sendEmailVerification } from "firebase/auth";
 import React, { useContext, useEffect, useState } from "react";
-import { Navigate, NavLink } from "react-router-dom";
+import { Navigate, NavLink, useLocation } from "react-router-dom";
 import Logo from "../components/Logo";
 import { AuthContext } from "../contexts/authContext";
 import { isEmailIsVerified } from "../services/firebase";
 
 export default function VerifyEmail() {
   const { currentUser } = useContext(AuthContext);
+  const location = useLocation();
+  let from = location.state?.from?.pathname;
   const [sendState, setSendState] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [counter, setCounter] = useState(120);
@@ -31,17 +34,33 @@ export default function VerifyEmail() {
     };
   }, [isLoading, counter]);
 
+  useEffect(() => {
+    if (from === "/register" && !isLoading) {
+      setIsLoading(true);
+    }
+  }, []);
+
   function resetState() {
     if (sendState !== "") setSendState("");
   }
 
-  async function handleSubmit(ev) {
-    ev.preventDefault();
+  async function resendEmail() {
     setIsLoading(true);
-    setSendState("SUCCESS");
+    sendEmailVerification(currentUser)
+      .then(() => {
+        // Email sent successfully
+        setSendState("SUCCESS");
+      })
+      .catch((error) => {
+        // Failed to send email
+        setSendState("FAIL");
+      });
   }
 
-  if (isEmailIsVerified) {
+  if (currentUser === null) {
+    //console.log(currentUser);
+    return <Navigate to="/" replace={true} />;
+  } else if (isEmailIsVerified()) {
     return <Navigate to="/dashboard" replace={true} />;
   }
   return (
@@ -59,10 +78,7 @@ export default function VerifyEmail() {
           </NavLink>
         </div>
 
-        <form
-          className="mb-4 flex flex-col items-center space-y-4 rounded bg-white px-8 pt-6 pb-8 shadow-md"
-          onSubmit={handleSubmit}
-        >
+        <div className="mb-4 flex flex-col items-center space-y-4 rounded bg-white px-8 pt-6 pb-8 shadow-md">
           <div className=" flex w-3/4 justify-center border-b pb-5">
             <p className=" text-3xl">Verificar cuenta</p>
           </div>
@@ -71,7 +87,7 @@ export default function VerifyEmail() {
             <button
               className={`${isLoading ? " hidden" : " block"} 
               focus:shadow-outline rounded bg-teal-500 py-2 px-4 font-semibold  text-white hover:bg-teal-600 focus:outline-none`}
-              type="submit"
+              onClick={resendEmail}
             >
               Reenviar email
             </button>
@@ -92,7 +108,7 @@ export default function VerifyEmail() {
               ? "Email enviado"
               : "Error el enviar email"}
           </p>
-        </form>
+        </div>
       </div>
     </div>
   );
