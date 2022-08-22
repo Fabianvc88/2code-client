@@ -40,7 +40,7 @@ export default function Register() {
       if (err.message === "EMAIL_EXISTS") {
         setErrorMsg("El email ya posee una cuenta asociada");
       } else {
-        setErrorMsg(err);
+        setErrorMsg(err.message);
       }
       setLoading(false);
       return;
