@@ -2,12 +2,9 @@ import { initializeApp } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
   getAuth,
-  onAuthStateChanged,
-  sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { Navigate } from "react-router";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDgKCrvyxpGa5k77O8NjREB7efCN_MZ6lI",
@@ -27,28 +24,13 @@ export function isEmailIsVerified() {
 }
 
 export async function singUp(email, password) {
-  //return createUserWithEmailAndPassword(auth, email, password);
-  //     .then((userCredential) => {
-
-  //     })
-  //     .catch((err) => {
-  //       if (err.code == "auth/email-already-in-use") {
-  //         throw "EMAIL_EXISTS";
-  //       } else throw "UNKNOWN";
-  //     });
-  // } catch (err) {
-  //   throw err;
-  // }
-
-  // return userCredential;
-
   const userCredential = await createUserWithEmailAndPassword(
     auth,
     email,
     password
   ).catch((err) => {
-    if (err.code == "auth/email-already-in-use") {
-      throw "EMAIL_EXISTS";
+    if (err.code === "auth/email-already-in-use") {
+      throw new Error("EMAIL_EXISTS");
     }
     return null;
   });

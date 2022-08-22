@@ -37,7 +37,7 @@ export default function Register() {
       // Create account on Firebase
       user = await singUp(emailRef.current.value, passwordRef.current.value);
     } catch (err) {
-      if (err === "EMAIL_EXISTS") {
+      if (err.message === "EMAIL_EXISTS") {
         setErrorMsg("El email ya posee una cuenta asociada");
       } else {
         setErrorMsg(err);
