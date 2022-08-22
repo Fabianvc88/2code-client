@@ -20,6 +20,7 @@ import CreateProblem from "./pages/CreateProblem";
 import EditProblem from "./pages/EditProblem";
 import React from "react";
 import VerifyEmail from "./pages/VerifyEmail";
+import AdminLogin from "./pages/AdminLogin";
 
 function App() {
   const user = false;
@@ -69,6 +70,7 @@ function App() {
               element={user ? <Navigate to="dashboard" /> : <Register />}
             />
             <Route path="verifyEmail" element={<VerifyEmail />} />
+            <Route path="adminLogin" element={<AdminLogin />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>

@@ -25,6 +25,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
+    let user = undefined;
     e.preventDefault();
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       setErrorMsg("Contraseñas no coinciden");
@@ -34,10 +35,18 @@ export default function Register() {
     try {
       setLoading(true);
       // Create account on Firebase
-      const user = await singUp(
-        emailRef.current.value,
-        passwordRef.current.value
-      );
+      user = await singUp(emailRef.current.value, passwordRef.current.value);
+    } catch (err) {
+      if (err === "EMAIL_EXISTS") {
+        setErrorMsg("El email ya posee una cuenta asociada");
+      } else {
+        setErrorMsg(err);
+      }
+      setLoading(false);
+      return;
+    }
+
+    try {
       if (!user) {
         setErrorMsg("Failed to create an account");
         setLoading(false);
@@ -75,8 +84,8 @@ export default function Register() {
         });
       // await sleep(1500);
       // navigate("/", { replace: true });
-    } catch (e) {
-      setErrorMsg("Failed to create an account");
+    } catch (err) {
+      setErrorMsg("Failed to create an account: ", err);
     }
   }
 
