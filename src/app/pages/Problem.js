@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import Tabs from "../components/Tabs";
 import LanguageDropdown from "../components/LanguageDropdown";
 import CodeMirror from "@uiw/react-codemirror";
@@ -6,38 +6,77 @@ import "codemirror/keymap/sublime";
 import { javascript } from "codemirror/mode/javascript/javascript";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { AuthContext } from "../contexts/authContext";
 
 export default function Problem() {
+  const { currentUser } = useContext(AuthContext);
   let params = useParams();
   const url = "http://localhost:5000/api";
   const [problem, setProblem] = useState({});
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   //`#include "stdio.h"\r\rint add(a, b) {\n   \n}`
-  const [code, setCode] = useState(
-    `#include "stdio.h"\r\rint add(a, b) {\n   \n}`
-  );
+  const [code, setCode] = useState("");
+  const languageList = [
+    { name: "javascript" },
+    { name: "c/c++" },
+    { name: "java" },
+    { name: "go" },
+  ];
+  const [selectedLanguage, setSelectedLanguage] = useState(languageList[0]);
 
   useEffect(() => {
-    getProblemDetails();
-  }, []);
+    async function fetchProblemDetails() {
+      const response = await axios.get(`${url}/problem/${params.problemId}`);
+      if (response.status !== 200) {
+        console.error(response.status, " : ", response.statusText);
+        return null;
+      }
+      return response.data;
+    }
+    async function fetchLatestUserSubmissionData() {
+      const response = await axios.post(`${url}/submission/data`, {
+        problemId: params.problemId,
+        email: currentUser.email,
+      });
+      if (response.status !== 200) {
+        console.error(response.status, " : ", response.statusText);
+        return null;
+      }
+      if (response.data.msg === "NO_SUBMISSION_FOUND") {
+        return null;
+      }
+      return response.data.submission;
+    }
+    async function fillPlaygroundData() {
+      // set default problem data
+      const problem = await fetchProblemDetails();
+      if (problem) {
+        setProblem(problem);
+        setCode(problem.jsmain);
+      }
+      // complement/replace default problem data with submission data
+      const submission = await fetchLatestUserSubmissionData();
+      if (submission) {
+        setCode(submission.solution);
+      }
+      setIsLoading(false);
+    }
 
-  const getProblemDetails = () => {
-    axios.get(`${url}/problem/${params.problemId}`).then((response) => {
-      setProblem(response.data);
-      setCode(response.data.jsmain);
-      setLoading(false);
-    });
-  };
+    fillPlaygroundData();
+  }, [params.problemId, currentUser.email]);
 
   function printData() {
     console.log(problem);
   }
 
-  const submitCode = () => {
-    console.log("Code is: ", code);
-    axios
-      .post(`${url}/submission/run`, { code })
-      .then((res) => console.log(res));
+  async function submitCode() {
+    const response = await axios.post(`${url}/submission/run`, {
+      code,
+      problemId: params.problemId,
+      language: selectedLanguage.name,
+      email: currentUser.email,
+    });
+    console.log(response.data);
     /*fetch(url, {
       method: "POST",
       header: {
@@ -51,7 +90,7 @@ export default function Problem() {
       .then((data) => {
         console.log(data);
       });*/
-  };
+  }
 
   if (isLoading) {
     return <div className=" flex items-center justify-center">Cargando...</div>;
@@ -92,7 +131,11 @@ export default function Problem() {
               {/* <button className="bg-perl rounded px-5 py-2 hover:bg-gray-100">
                 Lenguaje
               </button> */}
-              <LanguageDropdown />
+              <LanguageDropdown
+                languageList={languageList}
+                selectedLanguage={selectedLanguage}
+                setSelectedLanguage={setSelectedLanguage}
+              />
             </div>
             <div className="flex gap-x-10">
               <button
@@ -118,7 +161,7 @@ export default function Problem() {
                   value={code}
                   options={{
                     keyMap: "sublime",
-                    mode: "cpp",
+                    mode: "javascript",
                   }}
                   onChange={(editor, change) => {
                     setCode(editor.getValue());

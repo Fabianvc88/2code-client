@@ -2,22 +2,19 @@ import { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 
-const languages = [
-  { name: "C/C++" },
-  { name: "JavaScript" },
-  { name: "Java" },
-  { name: "Go" },
-];
-
-export default function Example() {
-  const [selected, setSelected] = useState(languages[0]);
+export default function LanguageDropdown({
+  languageList,
+  selectedLanguage,
+  setSelectedLanguage,
+}) {
+  //const [selectedLanguage, setSelectedLanguage] = useState(languageList[0]);
 
   return (
     <div className=" z-10 w-32 rounded border bg-white">
-      <Listbox value={selected} onChange={setSelected}>
+      <Listbox value={selectedLanguage} onChange={setSelectedLanguage}>
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full cursor-default py-1 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-            <span className="block truncate">{selected.name}</span>
+            <span className="block truncate">{selectedLanguage.name}</span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <SelectorIcon
                 className="h-5 w-5 text-gray-400"
@@ -32,7 +29,7 @@ export default function Example() {
             leaveTo="opacity-0"
           >
             <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {languages.map((language, languageIdx) => (
+              {languageList.map((language, languageIdx) => (
                 <Listbox.Option
                   key={languageIdx}
                   className={({ active }) =>
