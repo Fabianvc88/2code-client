@@ -1,26 +1,32 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { auth, isEmailIsVerified } from "../services/firebase";
+import React, { createContext, useContext } from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import VerifyEmail from "../pages/VerifyEmail";
+import { isEmailIsVerified } from "../services/firebase";
 
 export const AuthContext = createContext();
 
-export function RequireAuth({ children }) {
+export function RequireAuth() {
   const { currentUser } = useContext(AuthContext);
-  //const currentUser = useAuth();
-  let location = useLocation();
 
   if (!currentUser) {
-    // Redirect them to the /login page, but save the current location they were
-    // trying to go to when they were redirected. This allows us to send them
-    // along to that page after they login, which is a nicer user experience
-    // than dropping them off on the home page.
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" replace={true} />;
+  } else if (currentUser && !isEmailIsVerified()) {
+    return <VerifyEmail />;
+  } else {
+    return <Outlet />;
   }
-  if (!isEmailIsVerified()) {
-    return <Navigate to="/verifyEmail" replace />;
+}
+
+export function PublicRoutes() {
+  const { currentUser } = useContext(AuthContext);
+
+  if (!currentUser) {
+    return <Outlet />;
+  } else if (currentUser && !isEmailIsVerified()) {
+    return <VerifyEmail />;
+  } else {
+    return <Navigate to="/dashboard" replace={true} />;
   }
-  // if currentUser is found then we let them continue
-  return children;
 }
 
 // export function AuthProvider({ children }) {

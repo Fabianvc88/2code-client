@@ -45,41 +45,40 @@ export default function Dashboard() {
     fetchDashboardContent();
   }, [currentUser.email]);
 
-  return (
-    <div className="bg-perl flex h-screen flex-col items-center">
-      <header className="w-full">
-        <Navbar />
-      </header>
+  // <div className="bg-perl flex h-screen flex-col items-center">
+  //     <header className="w-full">
+  //       <Navbar />
+  //     </header>
+  //     {/**Body */}
 
-      {/**Body */}
-      <div className=" m-auto flex h-full w-full flex-col items-center  sm:p-6">
-        <div className=" flex w-4/6 flex-row">
-          <div className=" w-full">
-            <p className=" m-5 text-4xl font-medium text-gray-700">
-              ¡Hola, {firstname}!
-            </p>
-            <p className=" m-5 text-xl font-medium text-gray-700">
-              Tus problemas creados :
-            </p>
-          </div>
-          <div className=" flex w-2/6 flex-col gap-y-2 rounded-sm p-4 text-center">
-            <Link
-              className=" rounded-sm bg-gray-200 p-2 hover:bg-gray-300"
-              to="/problems/newProblem"
-            >
-              Nuevo problema
-            </Link>
-            <Link
-              className=" rounded-sm bg-gray-200 p-2 hover:bg-gray-300"
-              to="myproblems"
-            >
-              Algo mas
-            </Link>
-          </div>
+  return (
+    <div className=" m-auto flex h-full w-full flex-col items-center">
+      <div className=" flex w-4/6 flex-row">
+        <div className=" w-full">
+          <p className=" m-5 text-4xl font-medium text-gray-700">
+            ¡Hola, {firstname}!
+          </p>
+          <p className=" m-5 text-xl font-medium text-gray-700">
+            Tus problemas creados :
+          </p>
         </div>
-        <div className=" w-5/6 self-center">
-          <DashboardTable data={tableData} rowsPerPage={10} />
+        <div className=" flex w-2/6 flex-col gap-y-2 rounded-sm p-4 text-center">
+          <Link
+            className=" rounded-sm bg-gray-200 p-2 hover:bg-gray-300"
+            to="/problems/newProblem"
+          >
+            Nuevo problema
+          </Link>
+          <Link
+            className=" rounded-sm bg-gray-200 p-2 hover:bg-gray-300"
+            to="myproblems"
+          >
+            Algo mas
+          </Link>
         </div>
+      </div>
+      <div className=" w-5/6 self-center">
+        <DashboardTable data={tableData} rowsPerPage={10} />
       </div>
     </div>
   );

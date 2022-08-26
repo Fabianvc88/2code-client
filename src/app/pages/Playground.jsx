@@ -4,16 +4,13 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 function Playground() {
-  return (
-    <div className="bg-perl flex h-screen flex-col">
-      <header className="w-full">
-        <Navbar />
-      </header>
+  // <div className="bg-perl flex h-screen flex-col">
+  //     <header className="w-full">
+  //       <Navbar />
+  //     </header>
 
-      {/**Body */}
-      <Outlet />
-    </div>
-  );
+  //     {/**Body */}
+  return <Outlet />;
 }
 
 export default Playground;

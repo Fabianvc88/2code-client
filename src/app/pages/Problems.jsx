@@ -16,22 +16,21 @@ export default function Problems() {
     fetchTableData();
   }, []);
 
-  return (
-    <div className="bg-perl flex h-screen flex-col items-center">
-      <header className="w-full">
-        <Navbar />
-      </header>
+  // {/* <div className="bg-perl flex h-screen flex-col items-center"> */}
+  //     {/* <header className="w-full">
+  //       <Navbar />
+  //     </header> */}
 
-      {/**Body */}
-      <div className="m-auto flex h-full w-full flex-col gap-y-4 ">
-        <div className=" w-1/2 self-center">
-          <Link className=" hidden rounded-sm p-2 hover:bg-gray-200" to="new">
-            Nuevo problema
-          </Link>
-        </div>
-        <div className=" w-5/6 self-center ">
-          <Table data={tableData} rowsPerPage={12} />
-        </div>
+  //     {/**Body */}
+  return (
+    <div className="m-auto flex h-full w-full flex-col gap-y-4 ">
+      <div className=" w-1/2 self-center">
+        <Link className=" hidden rounded-sm p-2 hover:bg-gray-200" to="new">
+          Nuevo problema
+        </Link>
+      </div>
+      <div className=" w-5/6 self-center ">
+        <Table data={tableData} rowsPerPage={12} />
       </div>
     </div>
   );
