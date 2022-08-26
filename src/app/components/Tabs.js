@@ -7,6 +7,7 @@ function classNames(...classes) {
 
 export default function Tabs(props) {
   const [categories] = useState(["Enunciado", "Notas", "Comentarios"]);
+  const [showHelp, setShowHelp] = useState(false);
 
   const [comments, setComments] = useState([
     {
@@ -83,10 +84,20 @@ export default function Tabs(props) {
         <Tab.Panels className="mt-2 h-full rounded-md bg-white">
           <Tab.Panel className=" p-5">
             <h2 className=" py-5 font-bold">{props.title}</h2>
-            <p>{props.description}</p>
-            <button className=" my-5 text-gray-500 underline hover:cursor-pointer">
-              Mostrar ayuda:
+            <p className="text-justify">{props.description}</p>
+            <button
+              className={` my-5 text-gray-500 underline hover:cursor-pointer`}
+              onClick={() => {
+                setShowHelp((prev) => !prev);
+              }}
+            >
+              {showHelp ? "Ocultar ayuda" : "Mostrar ayuda"}
             </button>
+            <p
+              className={`${showHelp ? " block" : " hidden"} px-4 text-justify`}
+            >
+              {props.help}
+            </p>
           </Tab.Panel>
 
           <Tab.Panel className=" p-5">

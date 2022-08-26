@@ -3,7 +3,6 @@ import Tabs from "../components/Tabs";
 import LanguageDropdown from "../components/LanguageDropdown";
 import CodeMirror from "@uiw/react-codemirror";
 import "codemirror/keymap/sublime";
-import { javascript } from "codemirror/mode/javascript/javascript";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
@@ -14,7 +13,6 @@ export default function Problem() {
   const url = "http://localhost:5000/api";
   const [problem, setProblem] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  //`#include "stdio.h"\r\rint add(a, b) {\n   \n}`
   const [code, setCode] = useState("");
   const languageList = [
     { name: "javascript" },
@@ -23,6 +21,19 @@ export default function Problem() {
     { name: "go" },
   ];
   const [selectedLanguage, setSelectedLanguage] = useState(languageList[0]);
+  const [serverResponse, setServerResponse] = useState();
+  const [execFailedTestCase, setExecFailedTestCase] = useState([]);
+  /*let actionMsg;
+  if (serverResponse) {
+    let msgClassName;
+    if (serverResponse.status === "pass") {
+      msgClassName =
+        "self-center rounded-md bg-green-200 px-3 py-1 text-green-500";
+    } else {
+      msgClassName = "self-center rounded-md bg-red-200 px-3 py-1 text-red-500";
+    }
+    actionMsg = <p className={msgClassName}>{serverResponse.msg}</p>;
+  }*/
 
   useEffect(() => {
     async function fetchProblemDetails() {
@@ -77,19 +88,10 @@ export default function Problem() {
       email: currentUser.email,
     });
     console.log(response.data);
-    /*fetch(url, {
-      method: "POST",
-      header: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      mode: "cors",
-      body: JSON.stringify(code2),<div className="flex h-screen w-full flex-col">
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      });*/
+    if (response.data.status === "fail") {
+      setExecFailedTestCase(response.data.message.split(";"));
+    }
+    setServerResponse(response.data);
   }
 
   if (isLoading) {
@@ -105,6 +107,7 @@ export default function Problem() {
             className="h-full"
             title={problem.title}
             description={problem.description}
+            help={problem.help}
           />
         </div>
 
@@ -112,15 +115,15 @@ export default function Problem() {
         <div className="flex max-h-full w-full flex-col sm:w-2/3">
           <div className=" flex justify-between border-b p-2 px-10 text-sm text-slate-800">
             <div className="flex gap-x-10">
-              <button className="bg-perl rounded px-5 py-2 hover:bg-gray-100">
+              <button className="bg-perl hidden rounded px-5 py-2 hover:bg-gray-100">
                 Anterior
               </button>
-              <button className="bg-perl rounded px-5 py-2 hover:bg-gray-100">
+              <button className="bg-perl hidden rounded px-5 py-2 hover:bg-gray-100">
                 Siguiente
               </button>
             </div>
             <div className="flex gap-x-10">
-              <button className="rounded border border-rose-500  px-2 py-2 text-rose-500 transition-colors hover:bg-rose-600 hover:text-white  ">
+              <button className="hidden rounded border border-rose-500  px-2 py-2 text-rose-500 transition-colors hover:bg-rose-600 hover:text-white  ">
                 Finalizar Test
               </button>
             </div>
@@ -128,9 +131,6 @@ export default function Problem() {
 
           <div className=" flex justify-between border-l border-b p-2 px-10 text-sm text-slate-800">
             <div className="flex gap-x-10">
-              {/* <button className="bg-perl rounded px-5 py-2 hover:bg-gray-100">
-                Lenguaje
-              </button> */}
               <LanguageDropdown
                 languageList={languageList}
                 selectedLanguage={selectedLanguage}
@@ -138,17 +138,32 @@ export default function Problem() {
               />
             </div>
             <div className="flex gap-x-10">
+              <p
+                className={`${
+                  serverResponse
+                    ? serverResponse.status === "pass"
+                      ? "bg-green-200 text-emerald-700"
+                      : "bg-red-200 text-rose-700"
+                    : " hidden"
+                } self-center rounded-md px-3 py-1 `}
+              >
+                {serverResponse
+                  ? serverResponse.status === "pass"
+                    ? `${serverResponse.message}`
+                    : `La solución no ha pasado los casos de prueba` //Fallo en el caso de prueba:
+                  : ""}
+              </p>
               <button
                 className="bg-perl rounded px-3 py-2 text-emerald-600 transition-colors hover:bg-gray-100 "
-                onClick={submitCode}
+                onClick={printData}
               >
-                Ejecutar código
+                Guardar código
               </button>
               <button
                 className="rounded bg-gray-600 px-3 py-2 text-white transition-colors hover:bg-gray-500"
-                onClick={printData}
+                onClick={submitCode}
               >
-                Enviar solución
+                Ejecutar solución
               </button>
             </div>
           </div>
@@ -156,18 +171,21 @@ export default function Problem() {
           <div className="flex flex-1 border-l">
             <div className=" relative flex-1">
               <div className=" absolute h-full w-full overflow-y-auto">
-                {/* <div className=" relative h-full w-full "> */}
                 <CodeMirror
                   value={code}
                   options={{
                     keyMap: "sublime",
                     mode: "javascript",
+                    tabSize: 2,
+                    lineWrapping: true,
                   }}
                   onChange={(editor, change) => {
                     setCode(editor.getValue());
+                    if (serverResponse) {
+                      setServerResponse(undefined);
+                    }
                   }}
                 />
-                {/* </div> */}
               </div>
             </div>
           </div>
