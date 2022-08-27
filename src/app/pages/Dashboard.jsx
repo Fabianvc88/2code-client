@@ -1,12 +1,12 @@
-import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../contexts/authContext";
+import { AuthContext, DataContext } from "../contexts/authContext";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import DashboardTable from "../components/DashboardTable/Table";
 
 export default function Dashboard() {
-  const { currentUser, userData, setUserData } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
+  const { userData } = useContext(DataContext);
   const [firstname, setFirstname] = useState("");
   const url = "http://localhost:5000/api/user/check";
   const [tableData, setTableData] = useState([]);
@@ -64,16 +64,20 @@ export default function Dashboard() {
         </div>
         <div className=" flex w-2/6 flex-col gap-y-2 rounded-sm p-4 text-center">
           <Link
-            className=" rounded-sm bg-gray-200 p-2 hover:bg-gray-300"
+            className={`${
+              userData?.role === "admin" ? " block" : " hidden"
+            } rounded-sm bg-gray-200 p-2 hover:bg-gray-300`}
             to="/problems/newProblem"
           >
             Nuevo problema
           </Link>
           <Link
-            className=" rounded-sm bg-gray-200 p-2 hover:bg-gray-300"
-            to="myproblems"
+            className={`${
+              userData?.role === "admin" ? " block" : " hidden"
+            } rounded-sm bg-gray-200 p-2 hover:bg-gray-300`}
+            to="/admin/users"
           >
-            Algo mas
+            Gestionar usuarios
           </Link>
         </div>
       </div>

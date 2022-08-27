@@ -11,7 +11,7 @@ function classNames(...classes) {
 export default function Home() {
   const { currentUser } = useContext(AuthContext);
 
-  if (currentUser) console.log("verificado: ", currentUser.emailVerified);
+  //if (currentUser) console.log("verificado: ", currentUser.emailVerified);
 
   // <div clas>
   //     {/* <div className="bg-perl flex h-screen flex-col items-center"> */}

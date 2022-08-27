@@ -38,7 +38,6 @@ export default function Navbar(props) {
         //   signal: controller.signal,
         // }
       );
-      console.log("hola");
       setUserFirstname(user.data.firstname);
     }
     if (currentUser) getUserData(currentUser.email);

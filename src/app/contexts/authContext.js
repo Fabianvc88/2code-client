@@ -4,6 +4,7 @@ import VerifyEmail from "../pages/VerifyEmail";
 import { isEmailIsVerified } from "../services/firebase";
 
 export const AuthContext = createContext();
+export const DataContext = createContext();
 
 export function RequireAuth() {
   const { currentUser } = useContext(AuthContext);
@@ -28,6 +29,16 @@ export function PublicRoutes() {
   // }
   else {
     return <Navigate to="/dashboard" replace={true} />;
+  }
+}
+
+export function AdminRoutes() {
+  const { userData } = useContext(DataContext);
+
+  if (userData.role !== "admin") {
+    return <Navigate to="/dashboard" replace={true} />;
+  } else {
+    return <Outlet />;
   }
 }
 
