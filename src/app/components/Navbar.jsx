@@ -3,9 +3,11 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
 import { AuthContext } from "../contexts/authContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Avatar from "./Avatar";
 import { logOut } from "../services/firebase";
+import axios from "axios";
+import { apiUrl } from "../services/serverAddress";
 
 const navigation = [
   { name: "Inicio", href: "/", hidden: false, current: false },
@@ -21,6 +23,27 @@ function classNames(...classes) {
 export default function Navbar(props) {
   const [loading, setLoading] = useState(false);
   const { currentUser } = useContext(AuthContext);
+  const [userFirstname, setUserFirstname] = useState("");
+
+  useEffect(() => {
+    //const controller = new AbortController();
+    async function getUserData(email) {
+      const user = await axios.post(
+        apiUrl + "/user/check",
+        {
+          email,
+        }
+        // {
+        //   //TODO arreglas algo con el usuario. estaba creando el objeto user con todos los datos pero decidi crear solo un usestate con string y guardar solo el nombre. terminar esto mañana
+        //   signal: controller.signal,
+        // }
+      );
+      console.log("hola");
+      setUserFirstname(user.data.firstname);
+    }
+    if (currentUser) getUserData(currentUser.email);
+    //return controller.abort();
+  }, [currentUser]);
 
   async function handleSignOut() {
     console.log("logging out");
@@ -97,9 +120,10 @@ export default function Navbar(props) {
                 className="absolute inset-y-0 right-0 flex items-center gap-x-5 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
                 hidden={!currentUser}
               >
-                {/**<p className=" ml-4 text-sm" hidden={!currentUser}>
-                  {firstname}
-                        </p>*/}
+                <p className=" ml-4 text-sm" hidden={!currentUser}>
+                  {/* {currentUser.email.split("@")[0]} */}
+                  {userFirstname ? userFirstname : ""}
+                </p>
                 <Avatar
                   url="https://coaching.papareact.com/ai9"
                   hidden={!currentUser}

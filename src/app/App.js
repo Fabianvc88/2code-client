@@ -45,9 +45,12 @@ function App() {
                   <Route path=":problemId" element={<Problem />} />
                 </Route>
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="verifyEmail" element={<VerifyEmail />} />
               </Route>
               <Route path="*" element={<NotFoundPage />} />
+            </Route>
+
+            <Route element={<RequireAuth />}>
+              <Route path="verifyEmail" element={<VerifyEmail />} />
             </Route>
 
             <Route element={<PublicRoutes />}>
