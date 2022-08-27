@@ -53,11 +53,11 @@ function App() {
               <Route path="verifyEmail" element={<VerifyEmail />} />
             </Route>
 
-            <Route element={<PublicRoutes />}>
-              <Route path="login" element={<Login />} />
-              <Route path="register" element={<Register />} />
-              <Route path="adminLogin" element={<AdminLogin />} />
-            </Route>
+            {/* <Route element={<PublicRoutes />}> */}
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="adminLogin" element={<AdminLogin />} />
+            {/* </Route> */}
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>

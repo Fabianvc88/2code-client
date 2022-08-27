@@ -22,9 +22,11 @@ export function PublicRoutes() {
 
   if (!currentUser) {
     return <Outlet />;
-  } else if (currentUser && !isEmailIsVerified()) {
-    return <VerifyEmail />;
-  } else {
+  }
+  // else if (currentUser && !isEmailIsVerified()) {
+  //   return <VerifyEmail />;
+  // }
+  else {
     return <Navigate to="/dashboard" replace={true} />;
   }
 }

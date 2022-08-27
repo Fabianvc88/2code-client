@@ -25,6 +25,24 @@ export default function Register() {
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
+  async function createPostgresUser(email, firstname, lastname, password) {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/authentication/signup",
+        {
+          email,
+          firstname,
+          lastname,
+          password,
+        }
+      );
+      return response.data;
+    } catch (err) {
+      console.error("algo ha pasado");
+      throw new Error("USER_NOT_CREATED");
+    }
+  }
+
   async function handleSubmit(e) {
     let user = undefined;
     e.preventDefault();
@@ -34,9 +52,36 @@ export default function Register() {
     }
 
     try {
+      // Create account on postgres
+      const res = await createPostgresUser(
+        emailRef.current.value,
+        firstnameRef.current.value,
+        lastnameRef.current.value,
+        passwordRef.current.value
+      );
+      if (res.status === "EMAIL_IN_USE") {
+        setErrorMsg("El email ya posee una cuenta asociada");
+        setLoading(false);
+        return;
+      } else if (res.status !== "CREATE") {
+        setErrorMsg("Failed to create an account");
+        setLoading(false);
+        return;
+      }
+    } catch (err) {
+      setErrorMsg("Failed to create an account: ", err);
+    }
+
+    try {
       setLoading(true);
       // Create account on Firebase
       user = await singUp(emailRef.current.value, passwordRef.current.value);
+      if (!user) {
+        setErrorMsg("Failed to create an account");
+        setLoading(false);
+        await sleep(1500);
+        return;
+      }
     } catch (err) {
       if (err.message === "EMAIL_EXISTS") {
         setErrorMsg("El email ya posee una cuenta asociada");
@@ -48,28 +93,6 @@ export default function Register() {
     }
 
     try {
-      if (!user) {
-        setErrorMsg("Failed to create an account");
-        setLoading(false);
-        await sleep(1500);
-        return;
-      }
-      // Create account on postgres
-      const res = await axios.post(
-        "http://localhost:5000/api/authentication/signup",
-        {
-          email: emailRef.current.value,
-          firstname: firstnameRef.current.value,
-          lastname: lastnameRef.current.value,
-          password: passwordRef.current.value,
-        }
-      );
-      if (res.data.status !== "CREATE") {
-        setErrorMsg("Failed to create an account");
-        setLoading(false);
-        await sleep(1500);
-        return;
-      }
       // If user created successfully
       sendEmailVerification(user)
         .then(() => {
@@ -78,6 +101,7 @@ export default function Register() {
             replace: true,
             state: { from: location },
           });
+          return;
         })
         .catch((error) => {
           // Failed to send email
@@ -86,7 +110,7 @@ export default function Register() {
           setLoading(false);
         });
     } catch (err) {
-      setErrorMsg("Failed to create an account: ", err);
+      setErrorMsg("Failed to send email verification ", err);
     }
   }
 

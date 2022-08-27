@@ -31,6 +31,7 @@ export default function AdminLogin() {
       if (res.data.status !== "SIGNED") {
         throw res.data.status;
       }
+      // signin in Firebase
       const userCredential = await signIn(
         emailRef.current.value,
         passwordRef.current.value
