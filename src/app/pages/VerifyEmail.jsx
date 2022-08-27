@@ -13,18 +13,18 @@ export default function VerifyEmail() {
   const [sendState, setSendState] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [counter, setCounter] = useState(120);
-  let intervalId;
-
-  function tick() {
-    if (counter === 0) {
-      setIsLoading(false);
-      setCounter(120);
-    } else {
-      setCounter((prev) => prev - 1);
-    }
-  }
 
   useEffect(() => {
+    let intervalId;
+    function tick() {
+      if (counter === 0) {
+        setIsLoading(false);
+        setCounter(120);
+      } else {
+        setCounter((prev) => prev - 1);
+      }
+    }
+
     if (isLoading === true) {
       intervalId = setInterval(() => tick(), 1000);
     }
@@ -38,11 +38,7 @@ export default function VerifyEmail() {
     if (from === "/register" && !isLoading) {
       setIsLoading(true);
     }
-  }, []);
-
-  function resetState() {
-    if (sendState !== "") setSendState("");
-  }
+  }, [from, isLoading]);
 
   async function resendEmail() {
     setIsLoading(true);

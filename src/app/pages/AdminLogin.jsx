@@ -1,10 +1,8 @@
 import React, { useRef, useState, useContext } from "react";
-import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeftIcon } from "@heroicons/react/outline";
+import { Navigate, useNavigate } from "react-router-dom";
 import Logo from "../components/Logo";
 import { signIn } from "../services/firebase";
 import { AuthContext } from "../contexts/authContext";
-import { sleep } from "../utils/sleep";
 import axios from "axios";
 
 export default function AdminLogin() {
@@ -32,10 +30,7 @@ export default function AdminLogin() {
         throw res.data.status;
       }
       // signin in Firebase
-      const userCredential = await signIn(
-        emailRef.current.value,
-        passwordRef.current.value
-      );
+      await signIn(emailRef.current.value, passwordRef.current.value);
       navigate("/dashboard", { replace: true });
       return;
     } catch (err) {
