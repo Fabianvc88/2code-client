@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "http://localhost:5000/api";
+export const URL = "http://localhost:5000/api";
 
 export async function fetchAllUsers() {
   try {
@@ -32,3 +32,22 @@ export async function fetchUserData(email) {
     throw err;
   }
 }
+
+/*export async function fetchAdminUserTable(){
+    let user;
+    try {
+      user = await getUserDataFromDB(currentUser.email);
+      setFirstname(user.firstname);
+
+      const response = await axios.post(
+        "http://127.0.0.1:5000/api/user/problems",
+        {
+          id: user.id,
+        }
+      );
+      setTableData(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+}*/

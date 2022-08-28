@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
@@ -25,6 +25,7 @@ import { auth } from "./services/firebase";
 import { Main } from "./pages/Main";
 import { fetchUserData } from "./services/tocodeApi";
 import UserManagement from "./pages/UserManagement";
+import EditUser from "./pages/EditUser";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -59,12 +60,15 @@ function App() {
                     <Route path="edit/:problemId" element={<EditProblem />} />
                   </Route>
 
-                  <Route path="playground" element={<Playground />}>
+                  <Route path="playground" element={<Outlet />}>
                     <Route path=":problemId" element={<Problem />} />
                   </Route>
                   <Route path="dashboard" element={<Dashboard />} />
                   <Route path="admin" element={<AdminRoutes />}>
-                    <Route path="users" element={<UserManagement />} />
+                    <Route path="users" element={<Outlet />}>
+                      <Route index element={<UserManagement />} />
+                      <Route path=":userid" element={<EditUser />} />
+                    </Route>
                   </Route>
                 </Route>
                 <Route path="*" element={<NotFoundPage />} />
