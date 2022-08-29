@@ -2,15 +2,17 @@ import React, { useRef, useState, useContext, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
 import axios from "axios";
-import ToggleSwitch from "../components/ToggleSwitch";
+import {
+  deleteUserById,
+  getUserById,
+  updateUserById,
+} from "../services/tocodeApi";
+import WaintingToLoad from "../components/WaintingToLoad";
+import { sleep } from "../utils/sleep";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-
-const sleep = (milliseconds) => {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
-};
 
 export default function EditUser() {
   const navigate = useNavigate();
@@ -18,31 +20,25 @@ export default function EditUser() {
   const params = useParams();
   const url = "http://localhost:5000/api/user/";
 
-  const idRef = useRef();
-  const firstnameRef = useRef();
-  const lastnameRef = useRef();
-  const usernameRef = useRef();
-  const emailRef = useRef();
-  const roleRef = useRef();
-
   const [userCreationState, setUserCreationState] = useState("");
-  let [creationErrorMsg, setCreationErrorMsg] = useState("");
+  const [creationErrorMsg, setCreationErrorMsg] = useState("");
   const [user, setUser] = useState({});
-  const [isActive, setIsActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  /*useEffect(() => {
+  useEffect(() => {
     async function fetchUserFields() {
       try {
-        const response = await axios.get(`${url}/${params.userid}`);
-        setUser(response.data);
-        setIsActive(response.data.active);
+        const user = await getUserById(params.userid);
+        if (user) setUser(user);
+        //setIsActive(response.data.active);
       } catch (err) {
         console.log(err);
       }
     }
 
     fetchUserFields();
-  }, [params.userid]);*/
+    setIsLoading(false);
+  }, [params.userid]);
 
   async function sendUser(prob) {
     try {
@@ -57,37 +53,66 @@ export default function EditUser() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    //console.log("user id: ", user.userid);
-
-    const userModifications = {
-      firstname: firstnameRef.current.value,
-      lastname: lastnameRef.current.value,
-      username: usernameRef.current.value,
-      email: emailRef.current.value,
-      useremail: currentUser.current.value,
-      role: roleRef.current.value,
-    };
-
-    sendUser(userModifications).then(async (res) => {
-      if (res === "UPDATE") {
-        setUserCreationState("updated");
-        await sleep(1500);
-        navigate("/dashboard");
-      } else {
-        if (res.msg === "Uniquename already exists") {
-          setCreationErrorMsg("Título en uso");
+    updateUserById(params.userid, user)
+      .then(async (res) => {
+        if (res.status === "UPDATE") {
+          setUserCreationState("updated");
+          await sleep(1500);
+          navigate("/admin/users");
+        } else {
+          setCreationErrorMsg("Error desconocido: intentarlo más tarde");
+          setUserCreationState("failed");
+        }
+      })
+      .catch((err) => {
+        if (err.response.data.status === "USER_NOT_FOUND") {
+          setCreationErrorMsg("No se ha encontrado al usuario");
+        } else if (err.response.data.status === "USERNAME_TAKEN") {
+          setCreationErrorMsg("Nombre de usuario no disponible");
+        } else if (err.response.data.status === "EMAIL_IN_USE") {
+          setCreationErrorMsg(
+            "La dirección email ya tiene una cuenta asociada"
+          );
+        } else if (err.response.data.status == "NOT_ALLOWED") {
+          setCreationErrorMsg("Debe haber al menos un admin en todo momento");
         } else {
           setCreationErrorMsg("Error desconocido: intentarlo más tarde");
         }
         setUserCreationState("failed");
-      }
-    });
+      });
+  }
+
+  function handleDelete() {
+    deleteUserById(params.userid)
+      .then(async (res) => {
+        if (res.status === "DELETE") {
+          setUserCreationState("deleted");
+          await sleep(1500);
+          navigate("/admin/users");
+        } else {
+          setCreationErrorMsg("Error desconocido: intentarlo más tarde");
+          setUserCreationState("failed");
+        }
+      })
+      .catch((err) => {
+        if (err.response.data.status === "USER_NOT_FOUND") {
+          setCreationErrorMsg("No se ha encontrado al usuario");
+        } else if (err.response.data.status == "NOT_ALLOWED") {
+          setCreationErrorMsg("Debe haber al menos un admin en todo momento");
+        } else {
+          setCreationErrorMsg("Error desconocido: intentarlo más tarde");
+        }
+        setUserCreationState("failed");
+      });
   }
 
   function statusMsgReset() {
     if (userCreationState !== "") setUserCreationState("");
   }
 
+  if (isLoading) {
+    return <WaintingToLoad />;
+  }
   return (
     <div className=" flex h-full flex-col">
       <div className=" flex justify-center">
@@ -104,65 +129,85 @@ export default function EditUser() {
                 <p className=" mx-2">Nombre : </p>
                 <input
                   className=" w-1/4 rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
-                  id="title"
+                  id="firstname"
                   type="text"
                   autoComplete="off"
-                  ref={firstnameRef}
                   required
-                  onChange={statusMsgReset}
-                  defaultValue={user.title}
+                  onChange={(event) => {
+                    statusMsgReset();
+                    setUser((prev) => ({
+                      ...prev,
+                      firstname: event.target.value,
+                    }));
+                  }}
+                  defaultValue={user.firstname}
                 />
                 <p className=" mx-2">Apellido : </p>
                 <input
                   className=" w-1/3 rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
-                  id="title"
+                  id="lastname"
                   type="text"
                   autoComplete="off"
-                  ref={lastnameRef}
                   required
-                  onChange={statusMsgReset}
-                  defaultValue={user.title}
+                  onChange={(event) => {
+                    statusMsgReset();
+                    setUser((prev) => ({
+                      ...prev,
+                      lastname: event.target.value,
+                    }));
+                  }}
+                  defaultValue={user.lastname}
                 />
               </div>
               <div className=" flex items-center gap-x-3">
                 <p className=" mx-2">Usuario : </p>
                 <input
                   className=" w-1/4 rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
-                  id="title"
+                  id="username"
                   type="text"
                   autoComplete="off"
-                  ref={usernameRef}
                   required
-                  onChange={statusMsgReset}
-                  defaultValue={user.title}
+                  onChange={(event) => {
+                    statusMsgReset();
+                    setUser((prev) => ({
+                      ...prev,
+                      username: event.target.value,
+                    }));
+                  }}
+                  defaultValue={user.username}
                 />
                 <p className=" mx-2">Email : </p>
                 <input
                   className=" ml-3 w-1/4 rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
-                  id="title"
+                  id="email"
                   type="text"
                   autoComplete="off"
-                  ref={emailRef}
                   required
-                  onChange={statusMsgReset}
-                  defaultValue={user.title}
+                  onChange={(event) => {
+                    statusMsgReset();
+                    setUser((prev) => ({
+                      ...prev,
+                      email: event.target.value,
+                    }));
+                  }}
+                  defaultValue={user.email}
                 />
               </div>
               <div className=" flex gap-x-4 p-2">
                 <p>Rol : </p>
-                <select className=" pl-1" name="rol" ref={roleRef}>
-                  <option
-                    value="user"
-                    selected={user.role === "user" ? true : false}
-                  >
-                    user
-                  </option>
-                  <option
-                    value="admin"
-                    selected={user.role === "admin" ? true : false}
-                  >
-                    admin
-                  </option>
+                <select
+                  className=" pl-1"
+                  name="rol"
+                  value={user.role}
+                  onChange={(event) => {
+                    setUser((prev) => ({
+                      ...prev,
+                      role: event.target.value,
+                    }));
+                  }}
+                >
+                  <option value="user">user</option>
+                  <option value="admin">admin</option>
                 </select>
               </div>
             </div>
@@ -176,7 +221,6 @@ export default function EditUser() {
               <div className=" flex w-1/2 gap-x-6">
                 <Link
                   className=" focus:shadow-outline w-1/3 rounded-md bg-gray-100 p-2 py-2 px-4 text-center hover:bg-gray-200 focus:outline-none"
-                  type="submit"
                   to="/admin/users"
                 >
                   Cancelar
@@ -189,7 +233,8 @@ export default function EditUser() {
                 </button>
                 <button
                   className=" focus:shadow-outline w-1/3 rounded-md bg-red-200 p-2 py-2 px-4 text-center hover:bg-red-300 focus:outline-none"
-                  type="submit"
+                  type="button"
+                  onClick={handleDelete}
                 >
                   Eliminar usuario
                 </button>
@@ -210,6 +255,14 @@ export default function EditUser() {
                   )}
                 >
                   Usuario actualizado
+                </p>
+                <p
+                  className={classNames(
+                    userCreationState !== "deleted" ? " hidden " : " block",
+                    " bg-green-400 p-2 px-6"
+                  )}
+                >
+                  Usuario eliminado
                 </p>
               </div>
             </div>

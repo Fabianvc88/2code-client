@@ -23,7 +23,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import AdminLogin from "./pages/AdminLogin";
 import { auth } from "./services/firebase";
 import { Main } from "./pages/Main";
-import { fetchUserData } from "./services/tocodeApi";
+import { fetchUserDataByEmail } from "./services/tocodeApi";
 import UserManagement from "./pages/UserManagement";
 import EditUser from "./pages/EditUser";
 
@@ -37,7 +37,7 @@ function App() {
 
   useEffect(() => {
     if (currentUser) {
-      fetchUserData(currentUser.email).then((data) => {
+      fetchUserDataByEmail(currentUser.email).then((data) => {
         setUserData(data);
       });
     }

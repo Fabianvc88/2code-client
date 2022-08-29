@@ -22,11 +22,38 @@ export async function isAdmin(email) {
   }
 }
 
-export async function fetchUserData(email) {
+export async function fetchUserDataByEmail(email) {
   try {
     const response = await axios.post(URL + "/user/check", {
       email,
     });
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function getUserById(id) {
+  try {
+    const response = await axios.get(URL + "/user/" + id);
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function updateUserById(id, user) {
+  try {
+    const response = await axios.put(URL + "/user/" + id, user);
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function deleteUserById(id) {
+  try {
+    const response = await axios.delete(URL + "/user/" + id);
     return response.data;
   } catch (err) {
     throw err;
