@@ -51,8 +51,11 @@ const Table = ({ data, rowsPerPage }) => {
                 </td>
                 <td>
                   <div className=" flex items-center justify-center">
-                    {problem.status}
-                    {/* <CheckIcon className=" h-6 w-6" /> */}
+                    {problem.status === "pass" ? (
+                      <CheckIcon className=" h-6 w-6" />
+                    ) : (
+                      <MinusIcon className=" h-6 w-6" />
+                    )}
                   </div>
                 </td>
                 <td className=" text-center">

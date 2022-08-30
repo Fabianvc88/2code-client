@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { DataContext } from "../contexts/authContext";
 import { useContext, useEffect, useState } from "react";
 import SubmissionTable from "../components/SubmissionTable/Table";
@@ -21,8 +20,7 @@ export default function Dashboard() {
       setTableData(submissionList);
     }
 
-    fetchDashboardContent();
-    setIsLoading(false);
+    fetchDashboardContent().then(setIsLoading(false));
   }, []);
 
   if (isLoading) {
@@ -33,7 +31,7 @@ export default function Dashboard() {
       <div className=" flex w-4/6 flex-row">
         <div className=" w-full">
           <p className=" m-5 text-4xl font-medium text-gray-700">
-            ¡Hola, {userData.firstname}!
+            ¡Hola, {userData?.firstname}!
           </p>
           <p className=" m-5 text-xl font-medium text-gray-700">
             Tus últimas ejecuciones :

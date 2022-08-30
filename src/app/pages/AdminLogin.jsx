@@ -31,7 +31,7 @@ export default function AdminLogin() {
       }
       // signin in Firebase
       await signIn(emailRef.current.value, passwordRef.current.value);
-      navigate("/dashboard", { replace: true });
+      navigate("/", { replace: true });
       return;
     } catch (err) {
       setErrorMsg("Usuario y/o contraseña incorrectos");
@@ -44,7 +44,7 @@ export default function AdminLogin() {
   }
 
   if (currentUser) {
-    return <Navigate to="/dashboard" replace={true} />;
+    return <Navigate to="/" replace={true} />;
   }
   return (
     <div className="flex h-screen flex-col bg-gray-100 ">

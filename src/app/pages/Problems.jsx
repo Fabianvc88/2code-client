@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Table from "../components/Table/Table";
 import { getAllActiveProblemsOrderByProperty } from "../services/tocodeApi";
 import WaintingToLoad from "../components/WaintingToLoad";
+import { DataContext } from "../contexts/authContext";
 
 export default function Problems() {
+  const { userData } = useContext(DataContext);
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -13,7 +14,10 @@ export default function Problems() {
     async function fetchTableData() {
       let problemList;
       try {
-        problemList = await getAllActiveProblemsOrderByProperty("difficulty");
+        problemList = await getAllActiveProblemsOrderByProperty(
+          userData.id,
+          "difficulty"
+        );
       } catch (err) {
         console.error(err);
       }
@@ -22,7 +26,7 @@ export default function Problems() {
 
     fetchTableData();
     setIsLoading(false);
-  }, []);
+  }, [userData]);
 
   if (isLoading) {
     return <WaintingToLoad />;

@@ -59,7 +59,6 @@ export default function Navbar(props) {
   }, [currentUser]);
 
   async function handleSignOut() {
-    console.log("logging out");
     setLoading(true);
     try {
       await logOut();
@@ -142,12 +141,13 @@ export default function Navbar(props) {
                   hidden={!currentUser}
                 />
                 <button
-                  className=" flex items-center justify-center rounded-md border border-red-500 px-4 py-1 text-red-500 hover:bg-red-500 hover:text-gray-100"
+                  className={` ${
+                    currentUser ? "flex" : "hidden"
+                  } items-center justify-center rounded-md border border-red-500 px-4 py-1 text-red-500 hover:bg-red-500 hover:text-gray-100`}
                   onClick={handleSignOut}
                   disabled={loading || !currentUser}
-                  hidden={!currentUser}
                 >
-                  <svg
+                  {/* <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
@@ -163,7 +163,7 @@ export default function Navbar(props) {
                       d="M19 10a.75.75 0 00-.75-.75H8.704l1.048-.943a.75.75 0 10-1.004-1.114l-2.5 2.25a.75.75 0 000 1.114l2.5 2.25a.75.75 0 101.004-1.114l-1.048-.943h9.546A.75.75 0 0019 10z"
                       clipRule="evenodd"
                     />
-                  </svg>
+                  </svg> */}
                   Cerrar Sesión
                 </button>
               </div>

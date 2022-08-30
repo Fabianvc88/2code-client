@@ -69,10 +69,13 @@ export async function getUserSubmissions(id) {
   }
 }
 
-export async function getAllActiveProblemsOrderByProperty(property) {
+export async function getAllActiveProblemsOrderByProperty(authorid, property) {
   try {
     const response = await axios.get(
-      "http://127.0.0.1:5000/api/problem?property=" + property
+      "http://127.0.0.1:5000/api/problem?authorid=" +
+        authorid +
+        "&property=" +
+        property
     );
     return response.data;
   } catch (err) {
