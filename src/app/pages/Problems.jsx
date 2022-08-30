@@ -2,25 +2,31 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Table from "../components/Table/Table";
+import { getAllActiveProblemsOrderByProperty } from "../services/tocodeApi";
+import WaintingToLoad from "../components/WaintingToLoad";
 
 export default function Problems() {
   const [tableData, setTableData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchTableData() {
-      const response = await axios.get("http://127.0.0.1:5000/api/problem/");
-      setTableData(response.data);
+      let problemList;
+      try {
+        problemList = await getAllActiveProblemsOrderByProperty("difficulty");
+      } catch (err) {
+        console.error(err);
+      }
+      setTableData(problemList);
     }
 
     fetchTableData();
+    setIsLoading(false);
   }, []);
 
-  // {/* <div className="bg-perl flex h-screen flex-col items-center"> */}
-  //     {/* <header className="w-full">
-  //       <Navbar />
-  //     </header> */}
-
-  //     {/**Body */}
+  if (isLoading) {
+    return <WaintingToLoad />;
+  }
   return (
     <div className="m-auto flex h-full w-full flex-col gap-y-4 ">
       <div className=" w-1/2 self-center">

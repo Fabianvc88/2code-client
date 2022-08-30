@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Tabs from "../components/Tabs";
 import LanguageDropdown from "../components/LanguageDropdown";
 import CodeMirror from "@uiw/react-codemirror";
@@ -6,8 +6,7 @@ import "codemirror/keymap/sublime";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
-import { ArrowLeftIcon } from "@heroicons/react/outline";
-import { NavLink } from "react-router-dom";
+import BackButton from "../components/BackButton";
 
 export default function Problem() {
   const { currentUser } = useContext(AuthContext);
@@ -117,13 +116,7 @@ export default function Problem() {
         <div className="flex max-h-full w-full flex-col sm:w-2/3">
           <div className=" flex justify-between border-b p-2 text-sm text-slate-800">
             <div className="flex gap-x-10">
-              <NavLink
-                className=" flex rounded px-5 py-2 hover:bg-gray-100"
-                to="/problems"
-              >
-                <ArrowLeftIcon className="mr-2 h-6 w-5" />
-                Atrás
-              </NavLink>
+              <BackButton to="/problems" />
               <button className="bg-perl hidden rounded px-5 py-2 hover:bg-gray-100">
                 Anterior
               </button>

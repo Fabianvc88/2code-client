@@ -22,7 +22,6 @@
 .tableHeader {
   background-color: #f1f1f1;
   padding: 12px;
-  padding-left: 60px;
   font-weight: 500;
   text-align: left;
   font-size: 14px;
@@ -37,14 +36,14 @@
   border-top-right-radius: 15px;
 }
 
-.tableRowItems {
+/*.tableRowItems {
   cursor: pointer;
 }
 
-.tableRowItems:hover {
+C.tableRowItems:hover {
   cursor: pointer;
   opacity: 0.7;
-}
+}*/
 
 .tableRowItems:nth-child(odd) {
   background-color: #f7f7f7;
@@ -55,13 +54,25 @@
   font-size: 14px;
   color: rgb(75, 85, 99);
   text-align: center;
-  width: 10%;
+  width: 8%;
 }
 
 .tableCell {
   padding: 12px;
-  padding-left: 60px;
   font-size: 14px;
   color: rgb(75, 85, 99);
-  width: 22%;
+}
+
+.tableCellActive {
+  padding: 12px;
+  font-size: 14px;
+  color: rgb(35, 126, 35);
+  width: 20%;
+}
+
+.tableCellNotActive {
+  padding: 12px;
+  font-size: 14px;
+  color: rgb(255, 44, 44);
+  width: 20%;
 }

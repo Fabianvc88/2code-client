@@ -1,17 +1,13 @@
 import React, { useRef, useState, useContext, useEffect } from "react";
-import Navbar from "../components/Navbar";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
 import axios from "axios";
 import ToggleSwitch from "../components/ToggleSwitch";
+import { sleep } from "../utils/sleep";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-
-const sleep = (milliseconds) => {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
-};
 
 export default function EditProblem() {
   const navigate = useNavigate();
@@ -76,7 +72,7 @@ export default function EditProblem() {
       if (res === "UPDATE") {
         setProblemCreationState("updated");
         await sleep(1500);
-        navigate("/dashboard");
+        navigate("/dashboard/admin");
       } else {
         if (res.msg === "Uniquename already exists") {
           setCreationErrorMsg("Título en uso");
@@ -185,7 +181,7 @@ export default function EditProblem() {
                 <Link
                   className=" focus:shadow-outline w-1/3 rounded-sm bg-gray-100 p-2 py-2 px-4 text-center hover:bg-gray-200 focus:outline-none"
                   type="submit"
-                  to="/dashboard"
+                  to="/dashboard/admin"
                 >
                   Cancelar
                 </Link>

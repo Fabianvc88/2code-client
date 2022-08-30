@@ -1,7 +1,5 @@
-import React, { useRef, useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { AuthContext } from "../contexts/authContext";
-import axios from "axios";
 import {
   deleteUserById,
   getUserById,
@@ -16,9 +14,7 @@ function classNames(...classes) {
 
 export default function EditUser() {
   const navigate = useNavigate();
-  const { currentUser } = useContext(AuthContext);
   const params = useParams();
-  const url = "http://localhost:5000/api/user/";
 
   const [userCreationState, setUserCreationState] = useState("");
   const [creationErrorMsg, setCreationErrorMsg] = useState("");
@@ -40,16 +36,6 @@ export default function EditUser() {
     setIsLoading(false);
   }, [params.userid]);
 
-  async function sendUser(prob) {
-    try {
-      const res = await axios.put(`${url}/${params.userid}`, prob);
-      //console.log("received: ", res.data);
-      return res.data.status;
-    } catch (err) {
-      return err.response.data.errors[0];
-    }
-  }
-
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -58,7 +44,7 @@ export default function EditUser() {
         if (res.status === "UPDATE") {
           setUserCreationState("updated");
           await sleep(1500);
-          navigate("/admin/users");
+          navigate("/dashboard/admin/users");
         } else {
           setCreationErrorMsg("Error desconocido: intentarlo más tarde");
           setUserCreationState("failed");
@@ -73,7 +59,7 @@ export default function EditUser() {
           setCreationErrorMsg(
             "La dirección email ya tiene una cuenta asociada"
           );
-        } else if (err.response.data.status == "NOT_ALLOWED") {
+        } else if (err.response.data.status === "NOT_ALLOWED") {
           setCreationErrorMsg("Debe haber al menos un admin en todo momento");
         } else {
           setCreationErrorMsg("Error desconocido: intentarlo más tarde");
@@ -88,7 +74,7 @@ export default function EditUser() {
         if (res.status === "DELETE") {
           setUserCreationState("deleted");
           await sleep(1500);
-          navigate("/admin/users");
+          navigate("/dashboard/admin/users");
         } else {
           setCreationErrorMsg("Error desconocido: intentarlo más tarde");
           setUserCreationState("failed");
@@ -97,7 +83,7 @@ export default function EditUser() {
       .catch((err) => {
         if (err.response.data.status === "USER_NOT_FOUND") {
           setCreationErrorMsg("No se ha encontrado al usuario");
-        } else if (err.response.data.status == "NOT_ALLOWED") {
+        } else if (err.response.data.status === "NOT_ALLOWED") {
           setCreationErrorMsg("Debe haber al menos un admin en todo momento");
         } else {
           setCreationErrorMsg("Error desconocido: intentarlo más tarde");
@@ -221,7 +207,7 @@ export default function EditUser() {
               <div className=" flex w-1/2 gap-x-6">
                 <Link
                   className=" focus:shadow-outline w-1/3 rounded-md bg-gray-100 p-2 py-2 px-4 text-center hover:bg-gray-200 focus:outline-none"
-                  to="/admin/users"
+                  to="/dashboard/admin/users"
                 >
                   Cancelar
                 </Link>

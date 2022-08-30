@@ -1,18 +1,13 @@
 import React, { useRef, useState, useContext } from "react";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
 import axios from "axios";
 import ToggleSwitch from "../components/ToggleSwitch";
+import { sleep } from "../utils/sleep";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-
-const sleep = (milliseconds) => {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
-};
 
 export default function CreateProblem() {
   const navigate = useNavigate();
@@ -60,7 +55,7 @@ export default function CreateProblem() {
       if (res === "CREATE") {
         setProblemCreationState("created");
         await sleep(1500);
-        navigate("/dashboard");
+        navigate("/dashboard/admin");
       } else {
         if (res.msg === "Uniquename already exists") {
           setCreationErrorMsg("Título en uso");
@@ -75,13 +70,6 @@ export default function CreateProblem() {
   function titleChangeHandler() {
     if (problemCreationState !== "") setProblemCreationState("");
   }
-
-  // <div className="bg-perl flex h-screen flex-col">
-  //     <header className=" w-full">
-  //       <Navbar />
-  //     </header>
-
-  //     {/**Body */}
 
   return (
     <div className=" flex h-full flex-col">
@@ -157,7 +145,7 @@ export default function CreateProblem() {
                 <Link
                   className=" focus:shadow-outline w-1/3 rounded-sm bg-gray-100 p-2 py-2 px-4 text-center hover:bg-gray-200 focus:outline-none"
                   type="submit"
-                  to="/dashboard"
+                  to="/dashboard/admin"
                 >
                   Cancelar
                 </Link>

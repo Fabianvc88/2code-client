@@ -2,19 +2,12 @@ import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
-import { AuthContext } from "../contexts/authContext";
+import { AuthContext, DataContext } from "../contexts/authContext";
 import { useContext, useEffect, useState } from "react";
 import Avatar from "./Avatar";
 import { logOut } from "../services/firebase";
 import axios from "axios";
 import { apiUrl } from "../services/serverAddress";
-
-const navigation = [
-  { name: "Inicio", href: "/", hidden: false, current: false },
-  { name: "Ejercicios", href: "/problems", hidden: false, current: false },
-  { name: "Ayuda", href: "/about", hidden: false, current: false },
-  { name: "Dashboard", href: "/dashboard", hidden: false, current: false },
-];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -23,7 +16,28 @@ function classNames(...classes) {
 export default function Navbar(props) {
   const [loading, setLoading] = useState(false);
   const { currentUser } = useContext(AuthContext);
+  const { userData } = useContext(DataContext);
   const [userFirstname, setUserFirstname] = useState("");
+  let navigation = [
+    { name: "Inicio", href: "/", hidden: false, current: false },
+    { name: "Problemas", href: "/problems", hidden: false, current: false },
+    // { name: "Ayuda", href: "/about", hidden: false, current: false },
+    { name: "Historial", href: "/dashboard", hidden: false, current: false },
+  ];
+
+  if (userData?.role === "admin") {
+    navigation = [
+      { name: "Inicio", href: "/", hidden: false, current: false },
+      { name: "Ejercicios", href: "/problems", hidden: false, current: false },
+      // { name: "Ayuda", href: "/about", hidden: false, current: false },
+      {
+        name: "Consola",
+        href: "/dashboard/admin",
+        hidden: false,
+        current: false,
+      },
+    ];
+  }
 
   useEffect(() => {
     //const controller = new AbortController();
@@ -128,12 +142,29 @@ export default function Navbar(props) {
                   hidden={!currentUser}
                 />
                 <button
-                  className=" border border-red-500 px-4 py-1 text-red-500 hover:bg-red-500 hover:text-gray-100"
+                  className=" flex items-center justify-center rounded-md border border-red-500 px-4 py-1 text-red-500 hover:bg-red-500 hover:text-gray-100"
                   onClick={handleSignOut}
                   disabled={loading || !currentUser}
                   hidden={!currentUser}
                 >
-                  Sign out
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="mr-1 h-5 w-5"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M3 4.25A2.25 2.25 0 015.25 2h5.5A2.25 2.25 0 0113 4.25v2a.75.75 0 01-1.5 0v-2a.75.75 0 00-.75-.75h-5.5a.75.75 0 00-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 00.75-.75v-2a.75.75 0 011.5 0v2A2.25 2.25 0 0110.75 18h-5.5A2.25 2.25 0 013 15.75V4.25z"
+                      clipRule="evenodd"
+                    />
+                    <path
+                      fillRule="evenodd"
+                      d="M19 10a.75.75 0 00-.75-.75H8.704l1.048-.943a.75.75 0 10-1.004-1.114l-2.5 2.25a.75.75 0 000 1.114l2.5 2.25a.75.75 0 101.004-1.114l-1.048-.943h9.546A.75.75 0 0019 10z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Cerrar Sesión
                 </button>
               </div>
 
@@ -245,7 +276,7 @@ export default function Navbar(props) {
                 disabled={loading || !currentUser}
                 hidden={!currentUser}
               >
-                Sign out
+                Cerrar Sesión
               </button>
             </div>
           </Disclosure.Panel>

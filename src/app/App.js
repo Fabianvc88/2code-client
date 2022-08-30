@@ -26,6 +26,7 @@ import { Main } from "./pages/Main";
 import { fetchUserDataByEmail } from "./services/tocodeApi";
 import UserManagement from "./pages/UserManagement";
 import EditUser from "./pages/EditUser";
+import UserDashboard from "./pages/UserDashboard";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -63,11 +64,15 @@ function App() {
                   <Route path="playground" element={<Outlet />}>
                     <Route path=":problemId" element={<Problem />} />
                   </Route>
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route path="admin" element={<AdminRoutes />}>
-                    <Route path="users" element={<Outlet />}>
-                      <Route index element={<UserManagement />} />
-                      <Route path=":userid" element={<EditUser />} />
+
+                  <Route path="dashboard" element={<Outlet />}>
+                    <Route index element={<UserDashboard />} />
+                    <Route path="admin" element={<AdminRoutes />}>
+                      <Route index element={<Dashboard />} />
+                      <Route path="users" element={<Outlet />}>
+                        <Route index element={<UserManagement />} />
+                        <Route path=":userid" element={<EditUser />} />
+                      </Route>
                     </Route>
                   </Route>
                 </Route>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import BackButton from "../components/BackButton";
 import UserTable from "../components/UserTable/Table";
 import { fetchAllUsers } from "../services/tocodeApi";
 
@@ -18,7 +19,7 @@ export default function UserManagement() {
     }
 
     fetchUserTable();
-  }, []);
+  }, [tableData.length]);
 
   if (isLoading) {
     return (
@@ -31,7 +32,11 @@ export default function UserManagement() {
     <div className=" m-auto flex h-full w-full flex-col items-center">
       <div className=" flex w-4/6 flex-row">
         <div className=" w-full">
-          <p className=" m-5 text-4xl font-medium text-gray-700">
+          <BackButton
+            to="/dashboard/admin"
+            className=" w-28 rounded px-5 py-2 hover:bg-gray-100"
+          />
+          <p className=" mx-5 mb-5 text-4xl font-medium text-gray-700">
             Gestión de usuarios
           </p>
         </div>

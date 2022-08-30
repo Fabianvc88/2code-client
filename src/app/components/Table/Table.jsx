@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { CheckIcon, MinusIcon } from "@heroicons/react/solid";
 import useTable from "../../hooks/useTable";
 import styles from "./Table.module.css";
 import TableFooter from "./TableFooter";
@@ -10,9 +10,7 @@ const Table = ({ data, rowsPerPage }) => {
   const { slice, range } = useTable(data, page, rowsPerPage);
   const navigate = useNavigate();
 
-  /*function rowClickHandler(e) {
-    e.navigate(`/playground/${problem.id}`);
-  }*/
+  const headers = ["#", "id", "Título", "Dificultad", "Resuelto", " "];
 
   return (
     <div className=" flex flex-col items-center">
@@ -20,10 +18,12 @@ const Table = ({ data, rowsPerPage }) => {
         <table className={styles.table}>
           <thead className={styles.tableRowHeader}>
             <tr>
-              <th className={styles.tableIdHeader}>id</th>
-              <th className={styles.tableHeader}>Título</th>
-              <th className={styles.tableHeader}>Dificultad</th>
-              <th className={styles.tableHeader}></th>
+              <th className={styles.tableIdHeader}>{headers[0]}</th>
+              <th className={styles.tableIdHeader}>{headers[1]}</th>
+              <th className={styles.tableHeader}>{headers[2]}</th>
+              <th className={styles.tableHeader}>{headers[3]}</th>
+              <th className={styles.tableIdHeader}>{headers[4]}</th>
+              <th className={styles.tableIdHeader}>{headers[5]}</th>
             </tr>
           </thead>
           <tbody>
@@ -35,6 +35,9 @@ const Table = ({ data, rowsPerPage }) => {
                   navigate(`/playground/${problem.id}`);
                 }}
               >
+                <td className=" p-3 text-center text-sm text-gray-600">
+                  {i + 1 + rowsPerPage * (page - 1)}
+                </td>
                 <td className={styles.idCell}>{problem.id}</td>
                 <td className={styles.tableCell}>{problem.title}</td>
                 <td className={styles.tableCell}>
@@ -46,7 +49,13 @@ const Table = ({ data, rowsPerPage }) => {
                     ? "difícil"
                     : "?"}
                 </td>
-                <td className=" flex">
+                <td>
+                  <div className=" flex items-center justify-center">
+                    {problem.status}
+                    {/* <CheckIcon className=" h-6 w-6" /> */}
+                  </div>
+                </td>
+                <td className=" text-center">
                   <Link
                     to={`/playground/${problem.id}`}
                     key={problem.id}

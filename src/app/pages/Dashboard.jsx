@@ -3,6 +3,7 @@ import { AuthContext, DataContext } from "../contexts/authContext";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import DashboardTable from "../components/DashboardTable/Table";
+import WaintingToLoad from "../components/WaintingToLoad";
 
 export default function Dashboard() {
   const { currentUser } = useContext(AuthContext);
@@ -10,6 +11,7 @@ export default function Dashboard() {
   const [firstname, setFirstname] = useState("");
   const url = "http://localhost:5000/api/user/check";
   const [tableData, setTableData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   async function getUserDataFromDB(email) {
     try {
@@ -43,14 +45,12 @@ export default function Dashboard() {
     }
 
     fetchDashboardContent();
+    setIsLoading(false);
   }, [currentUser.email]);
 
-  // <div className="bg-perl flex h-screen flex-col items-center">
-  //     <header className="w-full">
-  //       <Navbar />
-  //     </header>
-  //     {/**Body */}
-
+  if (isLoading) {
+    return <WaintingToLoad />;
+  }
   return (
     <div className=" m-auto flex h-full w-full flex-col items-center">
       <div className=" flex w-4/6 flex-row">
@@ -75,7 +75,7 @@ export default function Dashboard() {
             className={`${
               userData?.role === "admin" ? " block" : " hidden"
             } rounded-sm bg-gray-200 p-2 hover:bg-gray-300`}
-            to="/admin/users"
+            to="/dashboard/admin/users"
           >
             Gestionar usuarios
           </Link>

@@ -60,6 +60,26 @@ export async function deleteUserById(id) {
   }
 }
 
+export async function getUserSubmissions(id) {
+  try {
+    const response = await axios.get(URL + "/submission/all/" + id);
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function getAllActiveProblemsOrderByProperty(property) {
+  try {
+    const response = await axios.get(
+      "http://127.0.0.1:5000/api/problem?property=" + property
+    );
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
 /*export async function fetchAdminUserTable(){
     let user;
     try {
