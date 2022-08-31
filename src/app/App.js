@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import Login from "./pages/Login";
 import About from "./pages/About";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -68,7 +68,7 @@ function App() {
                   <Route path="dashboard" element={<Outlet />}>
                     <Route index element={<UserDashboard />} />
                     <Route path="admin" element={<AdminRoutes />}>
-                      <Route index element={<Dashboard />} />
+                      <Route index element={<AdminDashboard />} />
                       <Route path="users" element={<Outlet />}>
                         <Route index element={<UserManagement />} />
                         <Route path=":userid" element={<EditUser />} />

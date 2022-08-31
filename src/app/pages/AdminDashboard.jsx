@@ -1,52 +1,31 @@
 import { Link } from "react-router-dom";
 import { AuthContext, DataContext } from "../contexts/authContext";
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
 import DashboardTable from "../components/DashboardTable/Table";
 import WaintingToLoad from "../components/WaintingToLoad";
+import {
+  getAllUserCreatedProblems,
+  getUserDataFromDB,
+} from "../services/tocodeApi";
 
-export default function Dashboard() {
+export default function AdminDashboard() {
   const { currentUser } = useContext(AuthContext);
   const { userData } = useContext(DataContext);
-  const [firstname, setFirstname] = useState("");
-  const url = "http://localhost:5000/api/user/check";
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  async function getUserDataFromDB(email) {
-    try {
-      const response = await axios.post(url, {
-        email,
-      });
-      return response.data;
-    } catch (err) {
-      console.log("Couldn't get user data");
-      return null;
-    }
-  }
-
   useEffect(() => {
     async function fetchDashboardContent() {
-      let user;
       try {
-        user = await getUserDataFromDB(currentUser.email);
-        setFirstname(user.firstname);
-
-        const response = await axios.post(
-          "http://127.0.0.1:5000/api/user/problems",
-          {
-            id: user.id,
-          }
-        );
-        setTableData(response.data);
+        const response = await getAllUserCreatedProblems(userData.id);
+        setTableData(response);
       } catch (err) {
         console.error(err);
       }
     }
 
-    fetchDashboardContent();
-    setIsLoading(false);
-  }, [currentUser.email]);
+    fetchDashboardContent().then(setIsLoading(false));
+  }, [currentUser.email, userData]);
 
   if (isLoading) {
     return <WaintingToLoad />;
@@ -56,7 +35,7 @@ export default function Dashboard() {
       <div className=" flex w-4/6 flex-row">
         <div className=" w-full">
           <p className=" m-5 text-4xl font-medium text-gray-700">
-            ¡Hola, {firstname}!
+            ¡Hola, {userData.firstname}!
           </p>
           <p className=" m-5 text-xl font-medium text-gray-700">
             Tus problemas creados :

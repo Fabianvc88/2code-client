@@ -3,31 +3,32 @@ import { Navigate, useNavigate } from "react-router-dom";
 import Logo from "../components/Logo";
 import { signIn } from "../services/firebase";
 import { AuthContext } from "../contexts/authContext";
-import axios from "axios";
+import { checkIsAdmin } from "../services/tocodeApi";
 
 export default function AdminLogin() {
   let navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
-  //let location = useLocation();
 
   const emailRef = useRef();
   const passwordRef = useRef();
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  //let from = location.state?.from?.pathname || "/";
-
   async function handleSubmit(e) {
     e.preventDefault();
     try {
       setLoading(true);
       // check if is admin
-      const res = await axios.post("http://localhost:5000/api/admin/signin", {
-        email: emailRef.current.value,
-        password: passwordRef.current.value,
-      });
-      if (res.data.status !== "SIGNED") {
-        throw res.data.status;
+      try {
+        const response = await checkIsAdmin(
+          emailRef.current.value,
+          passwordRef.current.value
+        );
+        if (response.status !== "SIGNED") {
+          throw response.status;
+        }
+      } catch (err) {
+        console.error(err);
       }
       // signin in Firebase
       await signIn(emailRef.current.value, passwordRef.current.value);

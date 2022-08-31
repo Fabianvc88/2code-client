@@ -4,8 +4,7 @@ import { ArrowLeftIcon } from "@heroicons/react/outline";
 import Logo from "../components/Logo";
 import { signIn } from "../services/firebase";
 import { AuthContext } from "../contexts/authContext";
-import { sleep } from "../utils/sleep";
-import axios from "axios";
+import { login } from "../services/tocodeApi";
 
 export default function Login() {
   let navigate = useNavigate();
@@ -21,19 +20,15 @@ export default function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
     try {
       setLoading(true);
       //check if user exists in postgres
-      const res = await axios.post(
-        "http://localhost:5000/api/authentication/login",
-        {
-          email: emailRef.current.value,
-          password: passwordRef.current.value,
-        }
+      const response = await login(
+        emailRef.current.value,
+        passwordRef.current.value
       );
-      if (res.data.status !== "SIGNED") {
-        throw res.data.status;
+      if (response.status !== "SIGNED") {
+        throw response.status;
       }
       //signin in firebase
       const userCredential = await signIn(

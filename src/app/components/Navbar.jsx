@@ -6,8 +6,7 @@ import { AuthContext, DataContext } from "../contexts/authContext";
 import { useContext, useEffect, useState } from "react";
 import Avatar from "./Avatar";
 import { logOut } from "../services/firebase";
-import axios from "axios";
-import { apiUrl } from "../services/serverAddress";
+import { fetchUserDataByEmail, URL } from "../services/tocodeApi";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -42,17 +41,8 @@ export default function Navbar(props) {
   useEffect(() => {
     //const controller = new AbortController();
     async function getUserData(email) {
-      const user = await axios.post(
-        apiUrl + "/user/check",
-        {
-          email,
-        }
-        // {
-        //   //TODO arreglas algo con el usuario. estaba creando el objeto user con todos los datos pero decidi crear solo un usestate con string y guardar solo el nombre. terminar esto mañana
-        //   signal: controller.signal,
-        // }
-      );
-      setUserFirstname(user.data.firstname);
+      const response = await fetchUserDataByEmail(email);
+      setUserFirstname(response.firstname);
     }
     if (currentUser) getUserData(currentUser.email);
     //return controller.abort();

@@ -1,7 +1,5 @@
-import React, { useState, useContext } from "react";
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import { AuthContext } from "../contexts/authContext";
 
 function classNames(...classes) {

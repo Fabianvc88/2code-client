@@ -1,9 +1,9 @@
 import React, { useRef, useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
-import axios from "axios";
 import ToggleSwitch from "../components/ToggleSwitch";
 import { sleep } from "../utils/sleep";
+import { createProblem } from "../services/tocodeApi";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -11,7 +11,6 @@ function classNames(...classes) {
 
 export default function CreateProblem() {
   const navigate = useNavigate();
-  const url = "http://localhost:5000/api/problem";
   const { currentUser } = useContext(AuthContext);
 
   const titleRef = useRef();
@@ -23,16 +22,6 @@ export default function CreateProblem() {
   const [problemCreationState, setProblemCreationState] = useState("");
   let [creationErrorMsg, setCreationErrorMsg] = useState();
   const [isActive, setIsActive] = useState(true);
-
-  async function sendProblem(problem) {
-    try {
-      const res = await axios.post(url, problem);
-      //console.log("received: ", res.data);
-      return res.data.status;
-    } catch (err) {
-      return err.response.data.errors[0];
-    }
-  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -51,20 +40,24 @@ export default function CreateProblem() {
       active: isActive,
     };
 
-    sendProblem(problem).then(async (res) => {
-      if (res === "CREATE") {
-        setProblemCreationState("created");
-        await sleep(1500);
-        navigate("/dashboard/admin");
-      } else {
-        if (res.msg === "Uniquename already exists") {
-          setCreationErrorMsg("Título en uso");
+    createProblem(problem)
+      .then(async (res) => {
+        if (res.status === "CREATE") {
+          setProblemCreationState("created");
+          await sleep(1500);
+          navigate("/dashboard/admin");
         } else {
-          setCreationErrorMsg("Error desconocido: intentarlo más tarde");
+          if (res.msg === "Uniquename already exists") {
+            setCreationErrorMsg("Título en uso");
+          } else {
+            setCreationErrorMsg("Error desconocido: intentarlo más tarde");
+          }
+          setProblemCreationState("failed");
         }
-        setProblemCreationState("failed");
-      }
-    });
+      })
+      .catch((err) => {
+        console.error(err.response.data.errors[0]);
+      });
   }
 
   function titleChangeHandler() {

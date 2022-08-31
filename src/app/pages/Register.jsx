@@ -4,9 +4,9 @@ import { ArrowLeftIcon } from "@heroicons/react/outline";
 import { singUp } from "../services/firebase";
 import Logo from "../components/Logo";
 import { AuthContext } from "../contexts/authContext";
-import axios from "axios";
 import { sleep } from "../utils/sleep";
 import { sendEmailVerification } from "firebase/auth";
+import { createNewUser } from "../services/tocodeApi";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -25,24 +25,6 @@ export default function Register() {
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function createPostgresUser(email, firstname, lastname, password) {
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/authentication/signup",
-        {
-          email,
-          firstname,
-          lastname,
-          password,
-        }
-      );
-      return response.data;
-    } catch (err) {
-      console.error("algo ha pasado");
-      throw new Error("USER_NOT_CREATED");
-    }
-  }
-
   async function handleSubmit(e) {
     let user = undefined;
     e.preventDefault();
@@ -53,23 +35,24 @@ export default function Register() {
 
     try {
       // Create account on postgres
-      const res = await createPostgresUser(
+      const response = await createNewUser(
         emailRef.current.value,
         firstnameRef.current.value,
         lastnameRef.current.value,
         passwordRef.current.value
       );
-      if (res.status === "EMAIL_IN_USE") {
+      if (response.status !== "CREATE") {
+        setErrorMsg("Failed to create an account");
+        setLoading(false);
+      }
+    } catch (err) {
+      if (err.response.data.status === "EMAIL_IN_USE") {
         setErrorMsg("El email ya posee una cuenta asociada");
         setLoading(false);
         return;
-      } else if (res.status !== "CREATE") {
-        setErrorMsg("Failed to create an account");
-        setLoading(false);
-        return;
+      } else {
+        setErrorMsg("Failed to create an account: ", err.response.data.status);
       }
-    } catch (err) {
-      setErrorMsg("Failed to create an account: ", err);
     }
 
     try {

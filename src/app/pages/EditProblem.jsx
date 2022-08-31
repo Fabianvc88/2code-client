@@ -1,9 +1,10 @@
 import React, { useRef, useState, useContext, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
-import axios from "axios";
 import ToggleSwitch from "../components/ToggleSwitch";
 import { sleep } from "../utils/sleep";
+import { editProblem, getProblemData } from "../services/tocodeApi";
+import WaintingToLoad from "../components/WaintingToLoad";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -13,7 +14,6 @@ export default function EditProblem() {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const params = useParams();
-  const url = "http://localhost:5000/api/problem/";
 
   const titleRef = useRef();
   const descriptionRef = useRef();
@@ -25,35 +25,24 @@ export default function EditProblem() {
   let [creationErrorMsg, setCreationErrorMsg] = useState();
   const [problem, setProblem] = useState({});
   const [isActive, setIsActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProblemFields() {
       try {
-        const response = await axios.get(`${url}/${params.problemId}`);
-        setProblem(response.data);
-        setIsActive(response.data.active);
+        const response = await getProblemData(params.problemId);
+        setProblem(response);
+        setIsActive(response.active);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
 
-    fetchProblemFields();
+    fetchProblemFields().then(setIsLoading(false));
   }, [params.problemId]);
-
-  async function sendProblem(prob) {
-    try {
-      const res = await axios.put(`${url}/${params.problemId}`, prob);
-      //console.log("received: ", res.data);
-      return res.data.status;
-    } catch (err) {
-      return err.response.data.errors[0];
-    }
-  }
 
   function handleSubmit(e) {
     e.preventDefault();
-
-    //console.log("user id: ", problem.userid);
 
     const problemModifications = {
       title: titleRef.current.value,
@@ -68,26 +57,40 @@ export default function EditProblem() {
       active: isActive,
     };
 
-    sendProblem(problemModifications).then(async (res) => {
-      if (res === "UPDATE") {
-        setProblemCreationState("updated");
-        await sleep(1500);
-        navigate("/dashboard/admin");
-      } else {
-        if (res.msg === "Uniquename already exists") {
-          setCreationErrorMsg("Título en uso");
+    editProblem(params.problemId, problemModifications)
+      .then(async (res) => {
+        if (res.status === "UPDATE") {
+          setProblemCreationState("updated");
+          await sleep(1500);
+          navigate("/dashboard/admin");
+        } else {
+          setCreationErrorMsg("Error desconocido: intentarlo más tarde");
+          setProblemCreationState("failed");
+        }
+      })
+      .catch((err) => {
+        if (err.response.data.status === "TITLE_IN_USE") {
+          setCreationErrorMsg("Error: Título en uso");
+        } else if (err.response.data.status === "PROBLEM_NOT_FOUND") {
+          setCreationErrorMsg("Error: Problema no encontrado");
+        } else if (err.response.data.status === "USER_NOT_AUTHOR") {
+          setCreationErrorMsg("Error: No es el autor del problema");
+        } else if (err.response.data.status === "USER_NOT_FOUND") {
+          setCreationErrorMsg("Error: Usuario no encontrado");
         } else {
           setCreationErrorMsg("Error desconocido: intentarlo más tarde");
         }
         setProblemCreationState("failed");
-      }
-    });
+      });
   }
 
   function titleChangeHandler() {
     if (problemCreationState !== "") setProblemCreationState("");
   }
 
+  if (isLoading) {
+    return <WaintingToLoad />;
+  }
   return (
     <div className=" flex h-full flex-col">
       <div className=" flex justify-center">

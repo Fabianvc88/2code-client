@@ -40,7 +40,7 @@ const Table = ({ data, rowsPerPage }) => {
           <tbody>
             {slice.map((entry, i) => {
               return (
-                <tr>
+                <tr key={i}>
                   <td className=" p-3 text-center text-sm text-gray-600">
                     {i + 1 + rowsPerPage * (page - 1)}
                   </td>

@@ -3,15 +3,18 @@ import Tabs from "../components/Tabs";
 import LanguageDropdown from "../components/LanguageDropdown";
 import CodeMirror from "@uiw/react-codemirror";
 import "codemirror/keymap/sublime";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
 import BackButton from "../components/BackButton";
+import {
+  getLatestUserSubmissionData,
+  getProblemData,
+  submitCodeForEvaluation,
+} from "../services/tocodeApi";
 
 export default function Problem() {
   const { currentUser } = useContext(AuthContext);
   let params = useParams();
-  const url = "http://localhost:5000/api";
   const [problem, setProblem] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [code, setCode] = useState("");
@@ -38,26 +41,32 @@ export default function Problem() {
 
   useEffect(() => {
     async function fetchProblemDetails() {
-      const response = await axios.get(`${url}/problem/${params.problemId}`);
-      if (response.status !== 200) {
-        console.error(response.status, " : ", response.statusText);
-        return null;
+      try {
+        const response = await getProblemData(params.problemId);
+        return response;
+      } catch (err) {
+        if (err.response.data.status === "NO_PROBLEM_FOUND") {
+          //console.error(err.response.data.status);
+          return null;
+        }
       }
-      return response.data;
     }
     async function fetchLatestUserSubmissionData() {
-      const response = await axios.post(`${url}/submission/data`, {
-        problemId: params.problemId,
-        email: currentUser.email,
-      });
-      if (response.status !== 200) {
-        console.error(response.status, " : ", response.statusText);
-        return null;
+      try {
+        const response = await getLatestUserSubmissionData(
+          params.problemId,
+          currentUser.email
+        );
+        if (response.status === "NO_SUBMISSION_FOUND") {
+          //console.error(response.status, " : ", response.statusText);
+          return null;
+        }
+        return response.submission;
+      } catch (err) {
+        if (err.response.data.status === "NO_SUBMISSION_FOUND") {
+          return null;
+        }
       }
-      if (response.data.msg === "NO_SUBMISSION_FOUND") {
-        return null;
-      }
-      return response.data.submission;
     }
     async function fillPlaygroundData() {
       // set default problem data
@@ -77,22 +86,22 @@ export default function Problem() {
     fillPlaygroundData();
   }, [params.problemId, currentUser.email]);
 
-  function printData() {
+  function saveData() {
+    //TODO save code to DB without submiting it
     console.log(problem);
   }
 
   async function submitCode() {
-    const response = await axios.post(`${url}/submission/run`, {
+    const response = await submitCodeForEvaluation(
       code,
-      problemId: params.problemId,
-      language: selectedLanguage.name,
-      email: currentUser.email,
-    });
-    console.log(response.data);
-    if (response.data.status === "fail") {
-      setExecFailedTestCase(response.data.message.split(";"));
+      params.problemId,
+      selectedLanguage.name,
+      currentUser.email
+    );
+    if (response.status === "fail") {
+      setExecFailedTestCase(response.message.split(";"));
     }
-    setServerResponse(response.data);
+    setServerResponse(response);
   }
 
   if (isLoading) {
@@ -157,7 +166,7 @@ export default function Problem() {
               </p>
               <button
                 className="bg-perl rounded px-3 py-2 text-emerald-600 transition-colors hover:bg-gray-100 "
-                onClick={printData}
+                onClick={saveData}
               >
                 Guardar código
               </button>

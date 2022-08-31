@@ -9,7 +9,16 @@ import TableFooter from "./TableFooter";
 const Table = ({ data, rowsPerPage }) => {
   const [page, setPage] = useState(1);
   const { slice, range } = useTable(data, page, rowsPerPage);
-  const headers = ["#", "id", "Email", "Nombre", "Apellido", "Usuario", "Rol"];
+  const headers = [
+    "#",
+    "id",
+    "Email",
+    "Nombre",
+    "Apellido",
+    "Usuario",
+    "Rol",
+    " ",
+  ];
 
   return (
     <div className=" flex flex-col items-center">
@@ -58,7 +67,7 @@ const Table = ({ data, rowsPerPage }) => {
                       className=" flex w-2/3 hover:cursor-pointer hover:underline"
                     >
                       Modificar
-                      <ArrowRightIcon className=" h-6 w-5 pl-2 " />
+                      {/* <ArrowRightIcon className=" h-6 w-5 pl-2 " /> */}
                     </Link>
                   </td>
                 </tr>
