@@ -120,15 +120,15 @@ export default function Navbar(props) {
               {/**Logged Username and picture */}
               <div
                 className="absolute inset-y-0 right-0 flex items-center gap-x-5 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
-                hidden={!currentUser}
+                hidden={currentUser}
               >
-                <p className=" ml-4 text-sm" hidden={!currentUser}>
+                <p className=" ml-4 text-sm" hidden={currentUser}>
                   {/* {currentUser.email.split("@")[0]} */}
                   {userFirstname ? userFirstname : ""}
                 </p>
                 <Avatar
                   url="https://coaching.papareact.com/ai9"
-                  hidden={!currentUser}
+                  hidden={currentUser}
                 />
                 <button
                   className={` ${
