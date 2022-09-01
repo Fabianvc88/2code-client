@@ -21,7 +21,7 @@ export default function Dashboard() {
     }
 
     fetchDashboardContent().then(setIsLoading(false));
-  }, []);
+  }, [userData]);
 
   if (isLoading) {
     return <WaintingToLoad />;

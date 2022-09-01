@@ -1,12 +1,13 @@
-import axios from "axios";
+//import axios from "axios";
+import axios from "./axiosConf";
 
-export const URL = "http://localhost:5000/api";
+//export const URL = "http://localhost:5000/api";
 
 // user
 
 export async function fetchAllUsers() {
   try {
-    const response = await axios.get(URL + "/user/all");
+    const response = await axios.get("/user/all");
     return response.data;
   } catch (err) {
     throw err;
@@ -15,7 +16,7 @@ export async function fetchAllUsers() {
 
 export async function fetchUserDataByEmail(email) {
   try {
-    const response = await axios.post(URL + "/user/check", {
+    const response = await axios.post("/user/check", {
       email,
     });
     return response.data;
@@ -39,7 +40,7 @@ export async function fetchUserDataByEmail(email) {
 
 export async function getUserById(id) {
   try {
-    const response = await axios.get(URL + "/user/" + id);
+    const response = await axios.get("/user/" + id);
     return response.data;
   } catch (err) {
     throw err;
@@ -48,7 +49,7 @@ export async function getUserById(id) {
 
 export async function updateUserById(id, user) {
   try {
-    const response = await axios.put(URL + "/user/" + id, user);
+    const response = await axios.put("/user/" + id, user);
     return response.data;
   } catch (err) {
     throw err;
@@ -57,7 +58,7 @@ export async function updateUserById(id, user) {
 
 export async function deleteUserById(id) {
   try {
-    const response = await axios.delete(URL + "/user/" + id);
+    const response = await axios.delete("/user/" + id);
     return response.data;
   } catch (err) {
     throw err;
@@ -66,7 +67,7 @@ export async function deleteUserById(id) {
 
 export async function getAllUserCreatedProblems(id) {
   try {
-    const response = await axios.post(URL + "/user/problems", {
+    const response = await axios.post("/user/problems", {
       id,
     });
     return response.data;
@@ -80,7 +81,7 @@ export async function getAllUserCreatedProblems(id) {
 //TODO when doing own authentication modify this function to authenticate admin
 export async function checkIsAdmin(email, password) {
   try {
-    const response = await axios.post(URL + "/admin/signin", {
+    const response = await axios.post("/admin/signin", {
       email,
       password,
     });
@@ -92,7 +93,7 @@ export async function checkIsAdmin(email, password) {
 
 export async function isAdmin(email) {
   try {
-    const response = await axios.post(URL + "/admin/check", {
+    const response = await axios.post("/admin/check", {
       email,
     });
     return response.data;
@@ -105,7 +106,7 @@ export async function isAdmin(email) {
 
 export async function createProblem(problem) {
   try {
-    const res = await axios.post(URL + "/problem", problem);
+    const res = await axios.post("/problem", problem);
     //console.log("received: ", res.data);
     return res.data;
   } catch (err) {
@@ -115,7 +116,7 @@ export async function createProblem(problem) {
 
 export async function editProblem(problemid, problem) {
   try {
-    const response = await axios.put(URL + "/problem/" + problemid, problem);
+    const response = await axios.put("/problem/" + problemid, problem);
     return response.data;
   } catch (err) {
     throw err;
@@ -125,7 +126,7 @@ export async function editProblem(problemid, problem) {
 export async function getAllActiveProblemsOrderByProperty(authorid, property) {
   try {
     const response = await axios.get(
-      URL + "/problem?authorid=" + authorid + "&property=" + property
+      "/problem?authorid=" + authorid + "&property=" + property
     );
     return response.data;
   } catch (err) {
@@ -135,7 +136,7 @@ export async function getAllActiveProblemsOrderByProperty(authorid, property) {
 
 export async function getProblemData(problemid) {
   try {
-    const response = await axios.get(URL + "/problem/" + problemid);
+    const response = await axios.get("/problem/" + problemid);
     return response.data;
   } catch (err) {
     throw err;
@@ -146,7 +147,7 @@ export async function getProblemData(problemid) {
 
 export async function getUserSubmissions(id) {
   try {
-    const response = await axios.get(URL + "/submission/all/" + id);
+    const response = await axios.get("/submission/all/" + id);
     return response.data;
   } catch (err) {
     throw err;
@@ -155,7 +156,7 @@ export async function getUserSubmissions(id) {
 
 export async function getLatestUserSubmissionData(problemId, email) {
   try {
-    const response = await axios.post(URL + "/submission/data", {
+    const response = await axios.post("/submission/data", {
       problemId,
       email,
     });
@@ -172,7 +173,7 @@ export async function submitCodeForEvaluation(
   email
 ) {
   try {
-    const response = await axios.post(URL + "/submission/run", {
+    const response = await axios.post("/submission/run", {
       code,
       problemId,
       language,
@@ -187,7 +188,7 @@ export async function submitCodeForEvaluation(
 // authentication
 export async function createNewUser(email, firstname, lastname, password) {
   try {
-    const response = await axios.post(URL + "/authentication/signup", {
+    const response = await axios.post("/authentication/signup", {
       email,
       firstname,
       lastname,
@@ -201,7 +202,7 @@ export async function createNewUser(email, firstname, lastname, password) {
 
 export async function login(email, password) {
   try {
-    const response = await axios.post(URL + "/authentication/login", {
+    const response = await axios.post("/authentication/login", {
       email,
       password,
     });

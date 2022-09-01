@@ -6,7 +6,7 @@ import { AuthContext, DataContext } from "../contexts/authContext";
 import { useContext, useEffect, useState } from "react";
 import Avatar from "./Avatar";
 import { logOut } from "../services/firebase";
-import { fetchUserDataByEmail, URL } from "../services/tocodeApi";
+import { fetchUserDataByEmail } from "../services/tocodeApi";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

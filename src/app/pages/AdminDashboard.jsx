@@ -3,10 +3,7 @@ import { AuthContext, DataContext } from "../contexts/authContext";
 import { useContext, useEffect, useState } from "react";
 import DashboardTable from "../components/DashboardTable/Table";
 import WaintingToLoad from "../components/WaintingToLoad";
-import {
-  getAllUserCreatedProblems,
-  getUserDataFromDB,
-} from "../services/tocodeApi";
+import { getAllUserCreatedProblems } from "../services/tocodeApi";
 
 export default function AdminDashboard() {
   const { currentUser } = useContext(AuthContext);
