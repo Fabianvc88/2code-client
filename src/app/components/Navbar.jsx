@@ -126,10 +126,10 @@ export default function Navbar(props) {
                   {/* {currentUser.email.split("@")[0]} */}
                   {userFirstname ? userFirstname : ""}
                 </p>
-                {/* <Avatar
+                <Avatar
                   url="https://coaching.papareact.com/ai9"
-                  hidden={currentUser}
-                /> */}
+                  hidden={!currentUser}
+                />
                 <button
                   className={` ${
                     currentUser ? "flex" : "hidden"
