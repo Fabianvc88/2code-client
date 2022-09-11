@@ -20,13 +20,13 @@ export default function Problem() {
   const [code, setCode] = useState("");
   const languageList = [
     { name: "javascript" },
-    { name: "c/c++" },
-    { name: "java" },
+    { name: "python" },
     { name: "go" },
   ];
   const [selectedLanguage, setSelectedLanguage] = useState(languageList[0]);
   const [serverResponse, setServerResponse] = useState();
   const [execFailedTestCase, setExecFailedTestCase] = useState([]);
+  const [floatingMessage, setFloatingMessage] = useState("");
   /*let actionMsg;
   if (serverResponse) {
     let msgClassName;
@@ -38,6 +38,12 @@ export default function Problem() {
     }
     actionMsg = <p className={msgClassName}>{serverResponse.msg}</p>;
   }*/
+
+  useEffect(() => {
+    if (floatingMessage !== "") {
+      //setTimeout(() => setFloatingMessage(""), 30000);
+    }
+  }, [floatingMessage]);
 
   useEffect(() => {
     async function fetchProblemDetails() {
@@ -92,16 +98,22 @@ export default function Problem() {
   }
 
   async function submitCode() {
-    const response = await submitCodeForEvaluation(
-      code,
-      params.problemId,
-      selectedLanguage.name,
-      currentUser.email
-    );
-    if (response.status === "fail") {
-      setExecFailedTestCase(response.message.split(";"));
+    try {
+      const response = await submitCodeForEvaluation(
+        code,
+        params.problemId,
+        selectedLanguage.name,
+        currentUser.email
+      );
+      if (response.status === "fail") {
+        setExecFailedTestCase(response.message.split(";"));
+      }
+      setServerResponse(response);
+    } catch (err) {
+      if (err.response.data.status === "err_exe") {
+        setFloatingMessage(err.response.data.message);
+      }
     }
-    setServerResponse(response);
   }
 
   if (isLoading) {
@@ -172,7 +184,10 @@ export default function Problem() {
               </button>
               <button
                 className="rounded bg-gray-600 px-3 py-2 text-white transition-colors hover:bg-gray-500"
-                onClick={submitCode}
+                onClick={() => {
+                  setFloatingMessage("");
+                  submitCode();
+                }}
               >
                 Ejecutar solución
               </button>
@@ -182,6 +197,23 @@ export default function Problem() {
           <div className="flex flex-1 border-l">
             <div className=" relative flex-1">
               <div className=" absolute h-full w-full overflow-y-auto">
+                <div
+                  className={`${
+                    floatingMessage === "" ? " hidden" : " block"
+                  } fixed top-48 right-10 z-10 w-1/4 rounded-md bg-red-300 p-6 shadow-md`}
+                >
+                  <div className=" absolute right-6 top-2">
+                    <button
+                      onClick={() => {
+                        setFloatingMessage("");
+                      }}
+                    >
+                      x
+                    </button>
+                  </div>
+                  <p>{floatingMessage.split("^^^")[0]}</p>
+                  <p>{floatingMessage.split("^^^")[1]}</p>
+                </div>
                 <CodeMirror
                   value={code}
                   options={{

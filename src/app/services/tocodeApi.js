@@ -123,10 +123,10 @@ export async function editProblem(problemid, problem) {
   }
 }
 
-export async function getAllActiveProblemsOrderByProperty(authorid, property) {
+export async function getAllActiveProblemsOrderByProperty(userid, property) {
   try {
     const response = await axios.get(
-      "/problem?authorid=" + authorid + "&property=" + property
+      "/problem?userid=" + userid + "&property=" + property
     );
     return response.data;
   } catch (err) {
