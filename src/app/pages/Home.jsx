@@ -22,7 +22,7 @@ export default function Home() {
         </h1>
         <p className=" w-4/5 text-center text-sm sm:text-lg ">
           2Code te permite probar tus habilidades de programación y te prepara
-          para los examenes. ;)
+          para los exámenes. ;)
         </p>
         <NavLink
           to="/register"
