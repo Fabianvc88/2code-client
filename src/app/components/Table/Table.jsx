@@ -10,7 +10,7 @@ const Table = ({ data, rowsPerPage }) => {
   const { slice, range } = useTable(data, page, rowsPerPage);
   const navigate = useNavigate();
 
-  const headers = ["#", "id", "Título", "Dificultad", "Resuelto", " "];
+  const headers = ["#", "Título", "Dificultad", "Resuelto", " "];
 
   return (
     <div className=" flex flex-col items-center">
@@ -19,11 +19,10 @@ const Table = ({ data, rowsPerPage }) => {
           <thead className={styles.tableRowHeader}>
             <tr>
               <th className={styles.tableIdHeader}>{headers[0]}</th>
-              <th className={styles.tableIdHeader}>{headers[1]}</th>
+              <th className={styles.tableHeader}>{headers[1]}</th>
               <th className={styles.tableHeader}>{headers[2]}</th>
-              <th className={styles.tableHeader}>{headers[3]}</th>
+              <th className={styles.tableIdHeader}>{headers[3]}</th>
               <th className={styles.tableIdHeader}>{headers[4]}</th>
-              <th className={styles.tableIdHeader}>{headers[5]}</th>
             </tr>
           </thead>
           <tbody>
@@ -38,7 +37,7 @@ const Table = ({ data, rowsPerPage }) => {
                 <td className=" p-3 text-center text-sm text-gray-600">
                   {i + 1 + rowsPerPage * (page - 1)}
                 </td>
-                <td className={styles.idCell}>{problem.id}</td>
+                {/* <td className={styles.idCell}>{problem.id}</td> */}
                 <td className={styles.tableCell}>{problem.title}</td>
                 <td className={styles.tableCell}>
                   {problem.difficulty === "10"
