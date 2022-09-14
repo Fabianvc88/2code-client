@@ -185,6 +185,20 @@ export async function submitCodeForEvaluation(
   }
 }
 
+export async function saveCode(code, problemid, language, userid) {
+  try {
+    const response = await axios.post("/submission/save", {
+      code,
+      problemid,
+      language,
+      userid,
+    });
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // authentication
 export async function createNewUser(email, firstname, lastname, password) {
   try {
