@@ -4,7 +4,7 @@ import LanguageDropdown from "../components/LanguageDropdown";
 import CodeMirror from "@uiw/react-codemirror";
 import "codemirror/keymap/sublime";
 import { useParams } from "react-router-dom";
-import { AuthContext } from "../contexts/authContext";
+import { AuthContext, DataContext } from "../contexts/authContext";
 import BackButton from "../components/BackButton";
 import {
   getLatestUserSubmissionData,
@@ -14,6 +14,7 @@ import {
 
 export default function Problem() {
   const { currentUser } = useContext(AuthContext);
+  const { userData } = useContext(DataContext);
   let params = useParams();
   const [problem, setProblem] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -130,6 +131,8 @@ export default function Problem() {
             title={problem.title}
             description={problem.description}
             help={problem.help}
+            problemid={params.problemId}
+            userid={userData.id}
           />
         </div>
 

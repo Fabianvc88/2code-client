@@ -1,13 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Tab } from "@headlessui/react";
+import { getNoteData, writeNoteData } from "../services/tocodeApi";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Tabs(props) {
-  const [categories] = useState(["Enunciado", "Notas", "Comentarios"]);
+  const [categories, setCategories] = useState(["Enunciado", "Notas"]); // "Comentarios" tab is disabled
   const [showHelp, setShowHelp] = useState(false);
+  const [note, setNote] = useState({});
+  const [loading, setLoading] = useState(true);
+  const noteRef = useRef();
+
+  useEffect(() => {
+    getNoteData(parseInt(props.problemid), parseInt(props.userid))
+      .then((response) => {
+        setNote(response);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (err.response.data.status === "NOTE_NOT_FOUND") {
+          setLoading(false);
+        }
+      });
+  }, [props.problemid, props.userid]);
+
+  async function saveNote() {
+    setLoading(true);
+    try {
+      const response = await writeNoteData(
+        props.problemid,
+        props.userid,
+        noteRef.current.value
+      );
+      if (response.status === "CREATE" || response.status === "UPDATE") {
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
+  }
 
   const [comments, setComments] = useState([
     {
@@ -101,7 +135,45 @@ export default function Tabs(props) {
           </Tab.Panel>
 
           <Tab.Panel className=" p-5">
-            <h2 className=" py-5 font-bold">2</h2>
+            <div className=" flex flex-row justify-between">
+              <p className=" p-2">Tus notas personales:</p>
+              <button
+                onClick={saveNote}
+                className={`${
+                  loading ? " " : ""
+                } flex rounded bg-sky-500 p-2 px-3 py-2 text-white transition-colors `}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className={`${
+                    loading ? " animate-spin" : " hidden"
+                  } mr-2 h-6 w-6`}
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Guardar nota
+              </button>
+            </div>
+            <textarea
+              className=" my-3 h-40 max-h-96 w-full rounded border py-2 px-3 leading-tight text-gray-700  focus:outline-none"
+              id="help1"
+              type="text"
+              autoComplete="off"
+              defaultValue={note.content}
+              ref={noteRef}
+              onChange={(event) => {
+                setNote((prev) => ({
+                  ...prev,
+                  content: event.target.value,
+                }));
+              }}
+            />
           </Tab.Panel>
 
           <Tab.Panel className=" p-5">

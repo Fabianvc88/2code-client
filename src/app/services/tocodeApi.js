@@ -211,6 +211,33 @@ export async function login(email, password) {
     throw err;
   }
 }
+
+//notes
+export async function getNoteData(problemid, authorid) {
+  try {
+    const response = await axios.post("/note", {
+      problemid,
+      authorid,
+    });
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function writeNoteData(problemid, authorid, content) {
+  try {
+    const response = await axios.put("/note", {
+      problemid,
+      authorid,
+      content,
+    });
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
 /*export async function getProblemData(problemid) {
   try {
     const response = await axios.get(URL + "/problem/" + problemid);
