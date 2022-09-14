@@ -7,7 +7,9 @@ export default function LanguageDropdown({
   selectedLanguage,
   setSelectedLanguage,
 }) {
-  //const [selectedLanguage, setSelectedLanguage] = useState(languageList[0]);
+  /* export default function LanguageDropdown({ setLanguage }) {
+  const [selectedLanguage, setSelectedLanguage] = useState(languageList[0]);
+  setLanguage(selectedLanguage.name); */
 
   return (
     <div className=" z-10 w-32 rounded border bg-white">
@@ -38,6 +40,7 @@ export default function LanguageDropdown({
                     }`
                   }
                   value={language}
+                  disabled={language.unavailable}
                 >
                   {({ selected }) => (
                     <>
