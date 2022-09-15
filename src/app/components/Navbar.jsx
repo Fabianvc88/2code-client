@@ -127,7 +127,8 @@ export default function Navbar(props) {
                   {userFirstname ? userFirstname : ""}
                 </p>
                 <Avatar
-                  url="https://coaching.papareact.com/ai9"
+                  url="/images/blank-profile-pic.png"
+                  /* url="https://coaching.papareact.com/ai9" */
                   hidden={!currentUser}
                 />
                 <button
